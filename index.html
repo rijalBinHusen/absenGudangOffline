@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Bismillah</title>
+</head>
+
+<body>
+<div id="utama">
+<button v-on:click="showMenu('inputdivisi')" class="btn">Input divisi</button>
+<button v-on:click="showMenu('inputstatus')" class="btn">Input status karyawan</button>
+<button v-on:click="showMenu('inputbagian')" class="btn">Input bagian karyawan</button>
+<button v-on:click="showMenu('none')" class="btn">Close</button>
+
+<div v-if="menu.inputdivisi">
+	
+	<input v-model="divisi.divisi" placeholder="input nama divisi" type="text"/>
+	<input v-if="divisi.baru" v-on:click="tambah('divisi')" class="btn" type="submit" value="tambah"/>
+	<input v-if="!divisi.baru"	v-on:click="update('divisi')" class="btn" type="submit" value="Update"/>
+	<div>
+	<h1>Daftar divisi</h1>
+		<ol>
+			<li v-for="(divisi, index) in divisi.daftar">{{divisi}} - <a href="#" @click="edit('divisi',index)">Edit</a> </li>
+		</ol>
+	</div>
+</div>
+
+<div v-if="menu.inputbagian">
+	
+	<input v-model="bagian.bagian" placeholder="input nama bagian" type="text"/>
+	<input v-if="bagian.baru" v-on:click="tambah('bagian')" class="btn" type="submit" value="tambah"/>
+	<input v-if="!bagian.baru"	v-on:click="update('bagian')" class="btn" type="submit" value="Update"/>
+	<div>
+	<h1>Daftar bagian</h1>
+		<ol>
+			<li v-for="(bagian, index) in bagian.daftar">{{bagian}} - <a href="#" @click="edit('bagian',index)">Edit</a> </li>
+		</ol>
+	</div>
+</div>
+
+
+</div>
+
+<script type="text/javascript" src="https://unpkg.com/vue@2.5.6/dist/vue.js"></script>
+<script type="text/javascript" src="script.js"></script>
+<script>
+
+</script>
+</body>
+
+</html>

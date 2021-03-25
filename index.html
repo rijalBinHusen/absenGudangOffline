@@ -115,7 +115,8 @@
 				<td> {{ absen.idKaryawan}} </td>
 				<td> {{ findObj(absen.idKaryawan, karyawan.daftar, 'namaKaryawan') }} </td>
 				<td> {{ divisi.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'divisi') ]}} </td>
-				<td> {{ bagian.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td>
+				<!--td> {{ bagian.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td-->
+				<td><input type="text" :disabled="!absen.disabled" :value="bagian.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'bagian') ]"></td>
 				<td> {{ absen.masuk}} </td>
 				<td> {{ absen.keluar}} </td>
 				<td> {{ Number(absen.keluar.substring(0,2)) - Number(absen.masuk.substring(0,2)) }} </td>

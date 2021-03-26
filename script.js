@@ -3,14 +3,13 @@ let daftarbagian = []
 let daftarlevel = []
 let daftarkaryawan = []
 let daftarabsen = []
-
+ 
 if (localStorage.getItem('daftardivisi')) { daftardivisi = JSON.parse(localStorage.getItem('daftardivisi')) }
 if (localStorage.getItem('daftarbagian')) { daftarbagian = JSON.parse(localStorage.getItem('daftarbagian')) }
 if (localStorage.getItem('daftarlevel')) { daftarlevel = JSON.parse(localStorage.getItem('daftarlevel')) }
 if (localStorage.getItem('daftarkaryawan')) { daftarkaryawan = JSON.parse(localStorage.getItem('daftarkaryawan')) }
 if (localStorage.getItem('daftarabsen')) { daftarabsen = JSON.parse(localStorage.getItem('daftarabsen')) }
-
-
+ 
 var app = new Vue({
 	el : '#utama',
 	data : {
@@ -52,12 +51,17 @@ var app = new Vue({
 				"idKaryawan" : null,
 				"masuk" : '',
 				"keluar" : '',
-				"keterangan" : ''
+				"keterangan" : '',
+				"istirahat" : 1
 			},
 			id : 0,
 			baru : true
 		},
-		gtanggal : ''
+		gtanggal : '',
+		css : {
+			navbar : 'w3-bar-item w3-button w3-hover-light-grey w3-padding',
+			table : 'w3-border w3-table w3-striped'
+		}
 	},
 	methods : {
 		showMenu (el) {
@@ -71,6 +75,9 @@ var app = new Vue({
 			}
 		},
 		edit (tab, v) {
+			/*if(tab == 'absen') {
+				this.absen.daftar[v].disabled = false
+			}*/
 			this[tab].id = v
 			this[tab].baru = false
 			this[tab][tab] = this[tab].daftar[v]
@@ -109,6 +116,7 @@ var app = new Vue({
 					"idKaryawan" : null,
 					"masuk" : '',
 					"keluar" : '',
+					"istirahat" : '1',
 					"keterangan" : ''
 				}
 			}
@@ -120,15 +128,37 @@ var app = new Vue({
 			return obj[key][val]
 		},
 		cekDate (dat) {
-			new Date(this.gtanggal).getTime() ? "" : alert("Masukkan tanggal yang benar dengan format YYYY-MM-DD (2021-03-13)")
+			if (new Date(this.gtanggal).getTime()) {
+			"" 	
 			this[dat][dat].tanggal = new Date(this.gtanggal).getTime();
+			} else {
+			this.gtanggal = '' 
+			alert("Masukkan tanggal yang benar dengan format YYYY-MM-DD (2021-03-13)");		
+			}
 		},
 		cekClock (waktu) {
 			let cek = waktu.includes(":") ? waktu.split(":") : ""
 			let tes = cek.length == 2 && cek[0].length == 2 && cek[1].length == 2 && cek[0] >= 0 && cek[0] < 24 && cek[1] >= 0 && cek[1] < 60
-			if (!tes) { alert("Masukkan jam dengan format yang benar benar HH:MM") }
+			if (!tes) { 
+				alert("Masukkan jam dengan format yang benar benar HH:MM")
+				waktu = ''
+			}
+		},
+		dateFormat(a) {
+		  const a001 = a[1] ? new Date(a[1]) : new Date();
+		  const a002 = a001.getDate();
+		  const a003 = a001.getMonth();
+		  const a004 = a001.getFullYear();
+		  const a005 = a001.getHours() > 9 ? a001.getHours() : "0"+a001.getHours();
+		  const a006 = a001.getMinutes() > 9 ? a001.getMinutes() : "0"+a001.getMinutes();
+		  const a007 = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Des"];
+ 
+		  if (a[0] == "time") { return a001.getTime(); } //dapatkan waktu dalam bentuk mili second
+		  else if (a[0] == "full") { return a002+" "+a007[a003]+" "+a004+" "+a005+":"+a006; }  //dapatkan waktu penuh yyyy mmm dd hh:mm
+		  else if (a[0] == "+1") { return a001.getTime()-25200000+86400000; } // hari selanjutnya pada jam 00:00
+		  else if (a[0] == "-1") { return a001.getTime()-25200000-86400000; } // hari sebelumnya pada jam 00:00
+		  else if (a[0] == "0") { return a001.getTime()-25200000; } // hari yang tersebut pada jam 00:00
+		  else if (a[0] == "tgl") { return a002+" "+a007[a003]+" "+a004; } //tanggal saja
 		}
-	}//, components: { vuejsDatepicker }
+	}
 })
-
-

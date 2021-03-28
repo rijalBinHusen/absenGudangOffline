@@ -12,7 +12,7 @@
  
 <body>
 <div id="utama">
-<div class="w3-center w3-teal w3-card-4">
+<div class="w3-center w3-teal w3-card-4 w3-top">
 	<span class="w3-bar">
 	<a href="#" :class="css.navbar" v-on:click="showMenu('inputdivisi')">Divisi</a>
 	<a href="#" :class="css.navbar" v-on:click="showMenu('inputlevel')">Status</a>
@@ -21,31 +21,38 @@
 	<a href="#" :class="css.navbar" v-on:click="showMenu('absen')">Absen</a>
 	<a href="#" :class="css.navbar" v-on:click="showMenu('none')">Close</a>
 	</span>
+	<span v-if="table.tampilkan.length > 3" class="w3-bar-item w3-dropdown-hover w3-display-topright">
+		<button :class="css.navbar">Tampilkan column</button>
+		<div class="w3-dropdown-content w3-bar-block w3-border">	
+			<label v-for="lisCol in table[Object.keys(menu)[0]]" class="w3-bar-item w3-button w3-hover-pale-blue"><input type="checkbox" v-model="table.tampilkan" :value="lisCol"> {{lisCol}}</label>
+		</div>
+	</span>
 </div>
+<br><br><br>
 <div class="w3-center w3-container w3-row w3-margin">
 	<div v-if="menu.inputdivisi">
  
-		<input v-model="divisi.divisi" placeholder="input nama divisi" type="text"/>
-		<input v-if="divisi.baru" v-on:click="tambah('divisi')" class="btn" type="submit" value="tambah"/>
-		<input v-if="!divisi.baru"	v-on:click="update('divisi')" class="btn" type="submit" value="Update"/>
-		<input v-on:click="resetModel('divisi')" class="btn" type="submit" value="Cancel"/>
+		<input :class="css.input" v-model="divisi.divisi" placeholder="input nama divisi" type="text"/>
+		<input :class="css.input" v-if="divisi.baru" v-on:click="tambah('divisi')" class="btn" type="submit" value="tambah"/>
+		<input :class="css.input" v-if="!divisi.baru"	v-on:click="update('divisi')" class="btn" type="submit" value="Update"/>
+		<input :class="css.input" v-on:click="resetModel('divisi')" class="btn" type="submit" value="Cancel"/>
 		<div>
 		<h1>Daftar divisi</h1>
-			<ol>
+			<ul class="w3-ul w3-border w3-striped">
 				<li v-for="(divisi, index) in divisi.daftar">{{divisi}} - <a href="#" @click="edit('divisi',index)">Edit</a> </li>
-			</ol>
+			</ul>
 		</div>
 	</div>
  
 	<div v-if="menu.inputbagian">
  
-		<input v-model="bagian.bagian" placeholder="input nama bagian" type="text"/>
-		<input v-if="bagian.baru" v-on:click="tambah('bagian')" class="btn" type="submit" value="tambah"/>
-		<input v-if="!bagian.baru"	v-on:click="update('bagian')" class="btn" type="submit" value="Update"/>
-		<input v-on:click="resetModel('bagian')" class="btn" type="submit" value="Cancel"/>
+		<input :class="css.input" v-model="bagian.bagian" placeholder="input nama bagian" type="text"/>
+		<input :class="css.input" v-if="bagian.baru" v-on:click="tambah('bagian')" class="btn" type="submit" value="tambah"/>
+		<input :class="css.input" v-if="!bagian.baru"	v-on:click="update('bagian')" class="btn" type="submit" value="Update"/>
+		<input :class="css.input" v-on:click="resetModel('bagian')" class="btn" type="submit" value="Cancel"/>
 		<div>
 		<h1>Daftar bagian</h1>
-			<ol>
+			<ol class="w3-ul w3-border w3-striped">
 				<li v-for="(bagian, index) in bagian.daftar">{{bagian}} - <a href="#" @click="edit('bagian',index)">Edit</a> </li>
 			</ol>
 		</div>
@@ -53,19 +60,20 @@
  
 	<div v-if="menu.inputlevel">
  
-		<input v-model="level.level.level" placeholder="input level karyawan" type="text"/>
-		<input v-model="level.level.jamKerja" @keypress="isNumber($event)" placeholder="input jam kerja" type="text"/>
-		<input v-if="level.baru && level.level.level && level.level.jamKerja" v-on:click="tambah('level')" class="btn" type="submit" value="tambah"/>
-		<input v-if="!level.baru"	v-on:click="update('level')" class="btn" type="submit" value="Update"/>
-		<input v-on:click="resetModel('level')" class="btn" type="submit" value="Reset"/>
+		<input :class="css.input" v-model="level.level.level" placeholder="input level karyawan" type="text"/>
+		<input :class="css.input" maxlength="1" v-model="level.level.jamKerja" @keypress="isNumber($event)" placeholder="input jam kerja" type="text"/>
+		<input :class="css.input" v-if="level.baru && level.level.level && level.level.jamKerja" v-on:click="tambah('level')" class="btn" type="submit" value="tambah"/>
+		<input :class="css.input" v-if="!level.baru" v-on:click="update('level')" class="btn" type="submit" value="Update"/>
+		<input :class="css.input" v-on:click="resetModel('level')" class="btn" type="submit" value="Reset"/>
 		<div>
 		<h1>Daftar level karyawan</h1>
 			<table :class="css.table" style="border:solid 1px">
 				<tr><th>Level karyawan</th><th>Total jam kerja</th><th>action</th></tr>
-				<tr v-for="(level, index) in level.daftar">
-					<td> {{level.level}} </td>
-					<td> {{level.jamKerja}} </td>
-					<td> <a href="#" @click="edit('level',index)">Edit</a> </td>
+				<tr v-for="(lislevel, index) in level.daftar">
+				<td><input :class="level.id !== index ? css.button : css.input" v-model="lislevel.level" :disabled="level.id !== index"></td>
+				<td><input :class="level.id !== index ? css.button : css.input" v-model="lislevel.jamKerja" :disabled="level.id !== index "></td>
+				<td v-if="level.id !== index"><input :class="css.button" type="submit" value="edit" v-on:click="update2('level', index)"/> </td>
+				<td v-if="level.id == index"><input :class="css.input" type="submit" value="save" v-on:click="simpan('level')"/> </td>
 				</tr>
 			</table>
 		</div>
@@ -73,67 +81,97 @@
  
 	<div v-if="menu.karyawan">
  
-		<input v-model="karyawan.karyawan.idKaryawan" placeholder="input id karyawan" type="text"/>
-		<input v-model="karyawan.karyawan.namaKaryawan" placeholder="input nama karyawan" type="text"/>
-		<select v-model="karyawan.karyawan.divisi">
+		<input size="6" :class="css.input" v-model="karyawan.karyawan.idKaryawan" placeholder="input id" type="text"/>
+		<input :class="css.input" v-model="karyawan.karyawan.namaKaryawan" placeholder="input nama karyawan" type="text"/>
+		<select :class="css.input" v-model="karyawan.karyawan.divisi">
 			<option v-for="(divisi, index) in divisi.daftar" v-bind:value="index"> {{ divisi }} </option>
 		</select>
- 
-		<select v-model="karyawan.karyawan.level">
+		<select :class="css.input" v-model="karyawan.karyawan.level">
 			<option v-for="(level, index) in level.daftar" v-bind:value="index">{{level.level}}</option>
 		</select>
-		<select v-model="karyawan.karyawan.bagian">
+		<select :class="css.input" v-model="karyawan.karyawan.bagian">
 			<option v-for="(bagian, index) in bagian.daftar" v-bind:value="index">{{bagian}}</option>
 		</select>
-		<input v-if="karyawan.baru" v-on:click="tambah('karyawan')" class="btn" type="submit" value="tambah"/>
-		<input v-if="!karyawan.baru"	v-on:click="update('karyawan')" class="btn" type="submit" value="Update"/>
-		<input v-on:click="resetModel('karyawan')" class="btn" type="submit" value="Reset"/>
+		<input :class="css.input" v-if="karyawan.baru" v-on:click="tambah('karyawan')" class="btn" type="submit" value="tambah"/>
+		<input :class="css.input" v-if="!karyawan.baru"	v-on:click="update('karyawan')" class="btn" type="submit" value="Update"/>
+		<input :class="css.input" v-on:click="resetModel('karyawan')" class="btn" type="submit" value="Reset"/>
 		<div>
 		<h1>Daftar karyawan</h1>
 			<table :class="css.table" style="border:solid 1px">
 				<tr><th>Id Karyawan</th><th>Nama karyawan</th><th>Divisi</th><th>Level</th><th>Bagian</th><th>action</th></tr>
-				<tr v-for="(karyawan, index) in karyawan.daftar">
-					<td> {{karyawan.idKaryawan}} </td>
-					<td> {{karyawan.namaKaryawan}} </td>
+				<tr v-for="(liskaryawan, index) in karyawan.daftar">
+					<td><input type="text" :class="css.button" size="6" :value="liskaryawan.idKaryawan" disabled/>  </td>
+					<td><input :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan.namaKaryawan" :disabled="karyawan.id !== index"></td>
+					<td>
+					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan.divisi" :disabled="karyawan.id !== index">
+						<option v-for="(divisi, index) in divisi.daftar" v-bind:value="index"> {{ divisi }} </option>
+					</select>
+					</td>
+					<td>
+					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan.level" :disabled="karyawan.id !== index">
+						<option v-for="(level, index) in level.daftar" v-bind:value="index">{{level.level}}</option>
+					</select>
+					</td>
+					<td>
+					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan.bagian" :disabled="karyawan.id !== index">
+						<option v-for="(bagian, index) in bagian.daftar" v-bind:value="index">{{bagian}}</option>
+					</select>	
+					</td>
+					<td v-if="karyawan.id !== index"><input :class="css.button" type="submit" value="edit" v-on:click="update2('karyawan', index)"/> </td>
+					<td v-if="karyawan.id == index"><input :class="css.input" type="submit" value="save" v-on:click="simpan('karyawan')"/> </td>
+					<!--td> {{karyawan.namaKaryawan}} </td>
 					<td> {{ divisi.daftar[karyawan.divisi] }} </td>
 					<td> {{ findObj(karyawan.level, level.daftar, 'level')}} </td>
 					<td> {{ bagian.daftar[karyawan.bagian] }} </td>
-					<td> <a href="#" @click="edit('karyawan',index)">Edit</a> </td>
+					<td> <a href="#" @click="edit('karyawan',index)">Edit</a> </td-->
 				</tr>
 			</table>
 		</div>
 	</div>
  
 	<div v-if="menu.absen">
-		<input  v-if="absen.baru" v-on:change="cekDate('absen')" v-model="gtanggal" placeholder="tanggal YYYY-MM-DD" type="text"/>
-		<select v-if="absen.baru" v-model="absen.absen.idKaryawan">
+		<input :class="css.input" maxlength="10" size="10" v-if="absen.baru" v-on:change="cekDate('absen')" v-model="gtanggal" placeholder="YYYY-MM-DD" type="text"/>
+		<select :class="css.input" v-if="absen.baru" v-model="absen.absen.idKaryawan">
 			<option v-for="(daftar, index) in karyawan.daftar" :value="index"> {{ daftar.idKaryawan }} - {{ daftar.namaKaryawan }} </option>
 		</select>
 		<!--input v-if="absen.absen.idKaryawan !== null" type="text" disabled :value="findObj(absen.absen.idKaryawan, karyawan.daftar, 'namaKaryawan')" /-->
-		<input type="text" v-model="absen.absen.masuk" v-on:change="cekClock(absen.absen.masuk)" placeholder="Jam masuk"/>
-		<input type="text" @keypress="isNumber($event)" v-model="absen.absen.istirahat"/>
-		<input type="text" v-model="absen.absen.keluar" v-on:change="cekClock(absen.absen.keluar)" placeholder="Jam keluar"/>
-		<input v-if="absen.baru && gtanggal && absen.absen.masuk && absen.absen.keluar" class="btn" type="submit" v-on:click="tambah('absen')" value="tambah"/>
-		<input v-if="!absen.baru"	v-on:click="update('absen')" class="btn" type="submit" value="Update"/>
-		<input v-on:click="resetModel('absen')" class="btn" type="submit" value="Reset"/>
+		<input :class="css.input" type="text" maxlength="5" size="5" v-model="absen.absen.masuk" v-on:change="cekClock(absen.absen.masuk)" placeholder="Masuk"/>
+		<input :class="css.input" type="text" maxlength="1" size="1" @keypress="isNumber($event)" v-model="absen.absen.istirahat" placeholder="Rehat"/>
+		<input :class="css.input" type="text" maxlength="5" size="5" v-model="absen.absen.keluar" v-on:change="cekClock(absen.absen.keluar)" placeholder="Keluar"/>
+		<input :class="css.input" v-if="absen.baru && gtanggal && absen.absen.masuk && absen.absen.keluar" class="btn" type="submit" v-on:click="tambah('absen')" value="tambah"/>
+		<input :class="css.input" v-if="!absen.baru"	v-on:click="update('absen')" class="btn" type="submit" value="Update"/>
+		<input :class="css.input" v-on:click="resetModel('absen')" class="btn" type="submit" value="Reset"/>
 		<div>
-		<h1>Absensi</h1>
+			<h1>Absensi</h1>
 			<table :class="css.table">
-				<tr><th>Tanggal</th><th>Id karyawan</th><th>Nama karyawan</th><th>Divisi</th><th>Bagian</th><th>Masuk</th><th>Istirahat</th><th>Pulang</th><th>Total</th><th>action</th></tr>
-				<tr v-for="(absen, index) in absen.daftar">
-					<td> {{ dateFormat(['tgl', absen.tanggal]) }} </td>
-					<td> {{ absen.idKaryawan}} </td>
-					<td> {{ findObj(absen.idKaryawan, karyawan.daftar, 'namaKaryawan') }} </td>
-					<td> {{ divisi.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'divisi') ]}} </td>
-					<td> {{ bagian.daftar[ findObj(absen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td>
-					<td>{{ absen.masuk }}</td>
-					<td>{{ absen.istirahat }}</td>
-					<td>{{ absen.keluar }}</td>
-					<td> {{ Number(absen.keluar.substring(0,2)) - Number(absen.masuk.substring(0,2)) -  absen.istirahat}} </td>
-					<!--td> {{ divisi.daftar[karyawan.divisi] }} </td>
-					<td> {{ findObj(karyawan.level, level.daftar).level }} </td>
-					<td> {{ bagian.daftar[karyawan.bagian] }} </td-->
-					<td> <a href="#" @click="edit('absen',index)">Edit</a> </td>
+				<tr>
+					<th v-for="lisShowCol in table.absen" v-if="table.tampilkan.includes(lisShowCol)" >{{lisShowCol}}</th>
+				</tr>
+				<tr v-for="(lisabsen, index) in absen.daftar">
+					<td  v-if="table.tampilkan.includes('tanggal')"> {{ dateFormat(['tgl', lisabsen.tanggal]) }} </td>
+					<td v-if="table.tampilkan.includes('id')"> {{ lisabsen.idKaryawan}} </td>
+					<td v-if="table.tampilkan.includes('nama')"> {{ findObj(lisabsen.idKaryawan, karyawan.daftar, 'namaKaryawan') }} </td>
+					<td v-if="table.tampilkan.includes('divisi')"> {{ divisi.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'divisi') ]}} </td>
+					<td v-if="table.tampilkan.includes('bagian')"> {{ bagian.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td>
+					<td v-if="table.tampilkan.includes('masuk')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.masuk" :disabled="absen.id !== index"></td>
+					<td v-if="table.tampilkan.includes('istirahat')"><input size="1" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.istirahat" :disabled="absen.id !== index"></td>
+					<td v-if="table.tampilkan.includes('keluar')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.keluar" :disabled="absen.id !== index"></td>
+					<td :ref="'total'+index" v-if="table.tampilkan.includes('total')"> 
+						{{ Number(lisabsen.keluar.substring(0,2)) > Number(lisabsen.masuk.substring(0,2)) ? 
+							Number(lisabsen.keluar.substring(0,2)) - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat :
+							Number(lisabsen.keluar.substring(0,2)) + 24 - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat
+						}} 
+					</td>
+					<td :ref="'normal'+index" v-if="table.tampilkan.includes('normal')">{{ level.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'level') ].jamKerja }}</td>
+					<td v-if="table.tampilkan.includes('selisih')">{{ 
+						(Number(lisabsen.keluar.substring(0,2)) > Number(lisabsen.masuk.substring(0,2)) ? 
+						Number(lisabsen.keluar.substring(0,2)) - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat :
+						Number(lisabsen.keluar.substring(0,2)) + 24 - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat) 
+						-
+						(level.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'level') ].jamKerja)
+					}}</td>
+					<td v-if="absen.id !== index && table.tampilkan.includes('action') "><input :class="css.button" type="submit" value="edit" v-on:click="update2('absen', index)"/> </td>
+					<td v-if="absen.id == index && table.tampilkan.includes('action')"><input :class="css.input" type="submit" value="save" v-on:click="simpan('absen')"/> </td>
 				</tr>
 			</table>
 		</div>

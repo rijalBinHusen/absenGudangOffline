@@ -29,7 +29,7 @@ var app = new Vue({
 		level : {
 			daftar : daftarlevel,
 			level : {"level" : '', "jamKerja" : ''},
-			id : 0,
+			id : null,
 			baru : true
 		},
 		karyawan : {
@@ -41,7 +41,7 @@ var app = new Vue({
 				"level" : '',
 				"bagian" : ''
 				},
-			id : 0,
+			id : null,
 			baru : true
 		},
 		absen : {
@@ -54,18 +54,30 @@ var app = new Vue({
 				"keterangan" : '',
 				"istirahat" : 1
 			},
-			id : 0,
+			id : null,
 			baru : true
 		},
 		gtanggal : '',
 		css : {
 			navbar : 'w3-bar-item w3-button w3-hover-light-grey w3-padding',
-			table : 'w3-border w3-table w3-striped'
+			table : 'w3-bar w3-padding-small',
+			button : 'w3-aqua w3-panel w3-padding-small w3-round w3-border',
+			input : 'w3-light-gray w3-panel w3-padding-small w3-round w3-border'
+		},
+		table : {
+			absen : [  "tanggal", "id", "nama", "divisi", "bagian", "masuk", "istirahat", "keluar", "total", "normal", "selisih", "action" ],
+			inputlevel : ['level', 'jam'],
+			karyawan : ['id', 'nama', 'divisi', 'level', 'bagian' ],
+			inputdivisi : [],
+			inputbagian : [],
+			none : [],
+			tampilkan : []
 		}
 	},
 	methods : {
 		showMenu (el) {
 			 this.menu = { [el] : true }
+			 this.table.tampilkan = this.table[el]
 		},
 		tambah (tab) {
 			if(this[tab][tab]) {
@@ -75,9 +87,6 @@ var app = new Vue({
 			}
 		},
 		edit (tab, v) {
-			/*if(tab == 'absen') {
-				this.absen.daftar[v].disabled = false
-			}*/
 			this[tab].id = v
 			this[tab].baru = false
 			this[tab][tab] = this[tab].daftar[v]
@@ -87,8 +96,13 @@ var app = new Vue({
 			this.resetModel(tab)
 			this.simpan(tab)
 		},
+		update2 (tab, key) {
+			this[tab].id == key ? this[tab].id = null : this[tab].id = key
+			console.log(this.$refs['normal0'][0].textContent)
+		},
 		simpan (tab) {
 			localStorage.setItem("daftar"+tab, JSON.stringify(this[tab].daftar));
+			this[tab].id = null
 		},
 		isNumber: function(evt) {
 		  evt = (evt) ? evt : window.event;
@@ -116,13 +130,13 @@ var app = new Vue({
 					"idKaryawan" : null,
 					"masuk" : '',
 					"keluar" : '',
-					"istirahat" : '1',
 					"keterangan" : ''
 				}
 			}
 			else { this[tab][tab] = "" }
 			this[tab].baru = true
-			this[tab].id = ''
+			this[tab].id = null
+			this.gtanggal =	 ''
 		},
 		findObj(key, obj, val) {
 			return obj[key][val]

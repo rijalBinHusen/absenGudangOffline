@@ -21,10 +21,10 @@
 	<a href="#" :class="css.navbar" v-on:click="showMenu('absen')">Absen</a>
 	<a href="#" :class="css.navbar" v-on:click="showMenu('none')">Close</a>
 	</span>
-	<span v-if="table.tampilkan.length > 3" class="w3-bar-item w3-dropdown-hover w3-display-topright">
+	<span v-if="tableTampil[Object.keys(menu)[0]] && tableTampil[Object.keys(menu)[0]]	.length > 3" class="w3-bar-item w3-dropdown-hover w3-display-topright">
 		<button :class="css.navbar">Tampilkan column</button>
 		<div class="w3-dropdown-content w3-bar-block w3-border">	
-			<label v-for="lisCol in table[Object.keys(menu)[0]]" class="w3-bar-item w3-button w3-hover-pale-blue"><input type="checkbox" v-model="table.tampilkan" :value="lisCol"> {{lisCol}}</label>
+			<label v-for="lisCol in tableOrigin[Object.keys(menu)[0]]" class="w3-bar-item w3-button w3-hover-pale-blue"><input type="checkbox" v-model="tableTampil[Object.keys(menu)[0]]" :value="lisCol"> {{lisCol}}</label>
 		</div>
 	</span>
 </div>
@@ -97,7 +97,7 @@
 		<input :class="css.input" v-on:click="resetModel('karyawan')" class="btn" type="submit" value="Reset"/>
 		<div>
 		<h1>Daftar karyawan</h1>
-			<table :class="css.table" style="border:solid 1px">
+			<table :class="css.table">
 				<tr><th>Id Karyawan</th><th>Nama karyawan</th><th>Divisi</th><th>Level</th><th>Bagian</th><th>action</th></tr>
 				<tr v-for="(liskaryawan, index) in karyawan.daftar">
 					<td><input type="text" :class="css.button" size="6" :value="liskaryawan.idKaryawan" disabled/>  </td>
@@ -145,33 +145,34 @@
 			<h1>Absensi</h1>
 			<table :class="css.table">
 				<tr>
-					<th v-for="lisShowCol in table.absen" v-if="table.tampilkan.includes(lisShowCol)" >{{lisShowCol}}</th>
+					<th v-for="lisShowCol in tableOrigin.absen" v-if="tableTampil.absen.includes(lisShowCol)" >{{lisShowCol}}</th>
 				</tr>
 				<tr v-for="(lisabsen, index) in absen.daftar">
-					<td  v-if="table.tampilkan.includes('tanggal')"> {{ dateFormat(['tgl', lisabsen.tanggal]) }} </td>
-					<td v-if="table.tampilkan.includes('id')"> {{ lisabsen.idKaryawan}} </td>
-					<td v-if="table.tampilkan.includes('nama')"> {{ findObj(lisabsen.idKaryawan, karyawan.daftar, 'namaKaryawan') }} </td>
-					<td v-if="table.tampilkan.includes('divisi')"> {{ divisi.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'divisi') ]}} </td>
-					<td v-if="table.tampilkan.includes('bagian')"> {{ bagian.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td>
-					<td v-if="table.tampilkan.includes('masuk')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.masuk" :disabled="absen.id !== index"></td>
-					<td v-if="table.tampilkan.includes('istirahat')"><input size="1" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.istirahat" :disabled="absen.id !== index"></td>
-					<td v-if="table.tampilkan.includes('keluar')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.keluar" :disabled="absen.id !== index"></td>
-					<td :ref="'total'+index" v-if="table.tampilkan.includes('total')"> 
+					<td  v-if="tableTampil.absen.includes('tanggal')"> {{ dateFormat(['tgl', lisabsen.tanggal]) }} </td>
+					<td v-if="tableTampil.absen.includes('id')"> {{ lisabsen.idKaryawan}} </td>
+					<td v-if="tableTampil.absen.includes('nama')"> {{ findObj(lisabsen.idKaryawan, karyawan.daftar, 'namaKaryawan') }} </td>
+					<td v-if="tableTampil.absen.includes('divisi')"> {{ divisi.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'divisi') ]}} </td>
+					<td v-if="tableTampil.absen.includes('bagian')"> {{ bagian.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'bagian') ]}} </td>
+					<td v-if="tableTampil.absen.includes('masuk')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.masuk" :disabled="absen.id !== index"></td>
+					<td v-if="tableTampil.absen.includes('istirahat')"><input size="1" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.istirahat" :disabled="absen.id !== index"></td>
+					<td v-if="tableTampil.absen.includes('keluar')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.keluar" :disabled="absen.id !== index"></td>
+					<td v-if="tableTampil.absen.includes('total')"> 
 						{{ Number(lisabsen.keluar.substring(0,2)) > Number(lisabsen.masuk.substring(0,2)) ? 
 							Number(lisabsen.keluar.substring(0,2)) - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat :
 							Number(lisabsen.keluar.substring(0,2)) + 24 - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat
 						}} 
 					</td>
-					<td :ref="'normal'+index" v-if="table.tampilkan.includes('normal')">{{ level.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'level') ].jamKerja }}</td>
-					<td v-if="table.tampilkan.includes('selisih')">{{ 
+					<td v-if="tableTampil.absen.includes('normal')">{{ level.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'level') ].jamKerja }}</td>
+					<td v-if="tableTampil.absen.includes('selisih')">{{ 
 						(Number(lisabsen.keluar.substring(0,2)) > Number(lisabsen.masuk.substring(0,2)) ? 
 						Number(lisabsen.keluar.substring(0,2)) - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat :
 						Number(lisabsen.keluar.substring(0,2)) + 24 - Number(lisabsen.masuk.substring(0,2)) -  lisabsen.istirahat) 
 						-
 						(level.daftar[ findObj(lisabsen.idKaryawan, karyawan.daftar, 'level') ].jamKerja)
 					}}</td>
-					<td v-if="absen.id !== index && table.tampilkan.includes('action') "><input :class="css.button" type="submit" value="edit" v-on:click="update2('absen', index)"/> </td>
-					<td v-if="absen.id == index && table.tampilkan.includes('action')"><input :class="css.input" type="submit" value="save" v-on:click="simpan('absen')"/> </td>
+					<td v-if="tableTampil.absen.includes('keterangan')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen.keterangan" :disabled="absen.id !== index"></td>
+					<td v-if="absen.id !== index && tableTampil.absen.includes('action') "><input :class="css.button" type="submit" value="edit" v-on:click="update2('absen', index)"/> </td>
+					<td v-if="absen.id == index && tableTampil.absen.includes('action')"><input :class="css.input" type="submit" value="save" v-on:click="simpan('absen')"/> </td>
 				</tr>
 			</table>
 		</div>

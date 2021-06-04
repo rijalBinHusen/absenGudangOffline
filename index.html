@@ -1,192 +1,65 @@
 <html>
 <head>
 <title>Bismillah</title>
-<!--link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"-->
 <link rel="stylesheet" href="../../../FrontEnd/script/w3.css">
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
-<!--link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
-<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
-<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css"-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
  
 <body>
 <div id="utama">
-<div class="w3-center w3-teal w3-card-4 w3-top">
-	<span class="w3-bar">
-	<a href="#" :class="css.navbar" v-on:click="showMenu('divisi')">Divisi</a>
-	<a href="#" :class="css.navbar" v-on:click="showMenu('level')">Status</a>
-	<a href="#" :class="css.navbar" v-on:click="showMenu('bagian')">Bagian</a>
-	<a href="#" :class="css.navbar" v-on:click="showMenu('karyawan')">Karyawan</a>
-	<a href="#" :class="css.navbar" v-on:click="showMenu('absen')">Absen</a>
-	<a href="#" :class="css.navbar" v-on:click="showMenu('none')">Close</a>
-	</span>
-	<span v-if="tableTampil[Object.keys(menu)[0]] && tableTampil[Object.keys(menu)[0]]	.length > 3" class="w3-bar-item w3-dropdown-hover w3-display-topright">
-		<button :class="css.navbar">Tampilkan column</button>
-		<div class="w3-dropdown-content w3-bar-block w3-border">	
-			<label v-for="lisCol in tableOrigin[Object.keys(menu)[0]]" class="w3-bar-item w3-button w3-hover-pale-blue"><input type="checkbox" v-model="tableTampil[Object.keys(menu)[0]]" :value="lisCol"> {{lisCol}}</label>
+
+	<!--Navbar-->
+	<div class="w3-center w3-teal w3-card-4 w3-top">
+		<!--Tombol navigasi bar-->
+		<span class="w3-bar">
+			<button
+			v-for="tab in tabs"
+			v-bind:key="tab"
+			v-on:click="currentTab = tab"
+			v-bind:class="clas.navbar"
+			>
+        	{{ tab }}
+			</button>
+		</span>
+	</div>
+	<br><br><br>
+
+	<!--Arena utama-->
+	<div v-bind:is="currentTabComponent" 
+	:datanya="deData[currentTab.toLowerCase()]" 
+	:icon="icon" 
+	@modal="modal = !modal"
+	class="w3-center w3-container w3-row w3-margin"
+	>
+
+	</div>
+
+	<!--Modal-->
+	<div v-if="modal" style="display: block;" class="w3-modal">
+		<div class="w3-modal-content">
+		  <header class="w3-container w3-teal"> 
+			<span @click="modal = !modal"
+			class="w3-button w3-display-topright">&times;</span>
+			<h2>Tambahkan {{currentTab.toLowerCase()}}</h2>
+		  </header>
+		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;">
+				<!--Panggil form component-->
+			  <form-content 
+			  :text="form[currentTab.toLowerCase()].text" 
+			  :field="currentTab.toLowerCase()" 
+			  @tambah="tambah($event)">
+			  </form-content>
+		  </div>
 		</div>
-	</span>
+	</div>
+
 </div>
-<br><br><br>
-<div class="w3-center w3-container w3-row w3-margin">
-	<div v-if="menu.divisi">
- 
-		<input :class="css.input" v-model="model[1]" placeholder="input nama divisi" type="text"/>
-		<input :class="css.input" v-if="divisi.baru" v-on:click="tambah('divisi', 1)" class="btn" type="submit" value="tambah"/>
-		<input :class="css.input" v-if="!divisi.baru"	v-on:click="update('divisi', 1)" class="btn" type="submit" value="Update"/>
-		<input :class="css.input" v-on:click="resetModel('divisi')" class="btn" type="submit" value="Cancel"/>
-		<div>
-		<h1>Daftar divisi</h1>
-			<ul class="w3-ul w3-border w3-striped">
-				<li v-for="(divisi, index) in divisi.daftar">{{divisi[0]}} - <a href="#" @click="edit('divisi',index)">Edit</a> </li>
-			</ul>
-		</div>
-	</div>
- 
-	<div v-if="menu.bagian">
- 
-		<input :class="css.input" v-model="model[1]" placeholder="input nama bagian" type="text"/>
-		<input :class="css.input" v-if="bagian.baru" v-on:click="tambah('bagian', 1)" class="btn" type="submit" value="tambah"/>
-		<input :class="css.input" v-if="!bagian.baru"	v-on:click="update('bagian', 1)" class="btn" type="submit" value="Update"/>
-		<input :class="css.input" v-on:click="resetModel('bagian')" class="btn" type="submit" value="Cancel"/>
-		<div>
-		<h1>Daftar bagian</h1>
-			<ol class="w3-ul w3-border w3-striped">
-				<li v-for="(bagian, index) in bagian.daftar">{{bagian[0]}} - <a href="#" @click="edit('bagian',index)">Edit</a> </li>
-			</ol>
-		</div>
-	</div>
- 
-	<div v-if="menu.level">
- 
-		<input :class="css.input" v-model="model[1]" placeholder="input level karyawan" type="text"/>
-		<input :class="css.input" maxlength="2" v-model="model[2]" @keypress="isNumber($event)" placeholder="input jam kerja" type="text"/>
-		<input :class="css.input" v-if="level.baru && model[1] && model[2]" v-on:click="tambah('level', 2)" class="btn" type="submit" value="tambah"/>
-		<input :class="css.input" v-if="!level.baru" v-on:click="update('level')" class="btn" type="submit" value="Update"/>
-		<input :class="css.input" v-on:click="resetModel('level')" class="btn" type="submit" value="Reset"/>
-		<div>
-		<h1>Daftar level karyawan</h1>
-			<table :class="css.table">
-				<tr><th>Level karyawan</th><th>Total jam kerja</th><th>action</th></tr>
-				<tr v-for="(lislevel, index) in level.daftar">
-				<td><input :class="level.id !== index ? css.button : css.input" v-model="lislevel[0]" :disabled="level.id !== index"></td>
-				<td><input :class="level.id !== index ? css.button : css.input" v-model="lislevel[1]" :disabled="level.id !== index "></td>
-				<td v-if="level.id !== index"><input :class="css.button" type="submit" value="edit" v-on:click="update2('level', index)"/> </td>
-				<td v-if="level.id == index"><input :class="css.input" type="submit" value="save" v-on:click="simpan('level')"/> </td>
-				</tr>
-			</table>
-		</div>
-	</div>
- 
-	<div v-if="menu.karyawan">
- 
-		<input size="6" :class="css.input" v-model="model[1]" placeholder="input id" type="text"/>
-		<input :class="css.input" v-model="model[2]" placeholder="input nama karyawan" type="text"/>
-		<select :class="css.input" v-model="model[3]">
-			<option v-for="(divisi, index) in divisi.daftar" v-bind:value="index"> {{ divisi[0] }} </option>
-		</select>
-		<select :class="css.input" v-model="model[4]">
-			<option v-for="(level, index) in level.daftar" v-bind:value="index">{{level[0]}}</option>
-		</select>
-		<select :class="css.input" v-model="model[5]">
-			<option v-for="(bagian, index) in bagian.daftar" v-bind:value="index">{{bagian[0]}}</option>
-		</select>
-		<input :class="css.input" v-if="karyawan.baru" v-on:click="tambah('karyawan', 5)" class="btn" type="submit" value="tambah"/>
-		<input :class="css.input" v-on:click="resetModel('karyawan')" class="btn" type="submit" value="Reset"/>
-		<div>
-		<h1>Daftar karyawan</h1>
-			<table :class="css.table">
-				<tr><th>Id Karyawan</th><th>Nama karyawan</th><th>Divisi</th><th>Level</th><th>Bagian</th><th>action</th></tr>
-				<tr v-for="(liskaryawan, index) in karyawan.daftar">
-					<td><input type="text" :class="css.button" size="6" :value="liskaryawan[0]" disabled/>  </td>
- 
-					<td><input :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan[1]" :disabled="karyawan.id !== index"></td>
-					<td>
-					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan[2]" :disabled="karyawan.id !== index">
-						<option v-for="(divisi, index) in divisi.daftar" v-bind:value="index"> {{ divisi[0] }} </option>
-					</select>
-					</td>
-					<td>
-					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan[3]" :disabled="karyawan.id !== index">
-						<option v-for="(level, index) in level.daftar" v-bind:value="index">{{level[0]}}</option>
-					</select>
-					</td>
-					<td>
-					<select :class="karyawan.id !== index ? css.button : css.input" v-model="liskaryawan[4]" :disabled="karyawan.id !== index">
-						<option v-for="(bagian, index) in bagian.daftar" v-bind:value="index">{{bagian[0]}}</option>
-					</select>	
-					</td>
-					<td v-if="karyawan.id !== index"><input :class="css.button" type="submit" value="edit" v-on:click="update2('karyawan', index)"/> </td>
-					<td v-if="karyawan.id == index"><input :class="css.input" type="submit" value="save" v-on:click="simpan('karyawan')"/> </td>
-				</tr>
-			</table>
-		</div>
-	</div>
- 
-	<div v-if="menu.absen">
-		<input :class="css.input" maxlength="10" size="10" v-if="absen.baru" v-on:change="cekDate(1)" v-model="model[1]" placeholder="YYYY-MM-DD" type="text"/>
-		<select :class="css.input" v-if="absen.baru" :value="model[2]" @change="absen1">
-			<option v-for="(daftar, index) in karyawan.daftar" :value="index"> {{ daftar[0] }} - {{ daftar[1] }} </option>
-		</select>
-		<input type="text" v-model="divisi.daftar[model[3]]" disabled>
-		<input type="text" v-model="bagian.daftar[model[4]]" disabled>
-		<input :class="css.input" type="text" maxlength="5" size="5" v-model="model[5]" v-on:change="cekClock(5)" placeholder="Masuk"/>
-		<input :class="css.input" type="text" maxlength="1" size="2" @keypress="isNumber($event)" v-model="model[6]" placeholder="Rehat"/>
-		<input :class="css.input" type="text" maxlength="5" size="5" v-model="model[7]" v-on:change="cekClock(7)" placeholder="Keluar"/>
-		<input :class="css.input" class="btn" type="submit" v-on:click="tambah('absen', 7)" value="tambah"/>
-		<input :class="css.input" v-if="!absen.baru" v-on:click="update('absen')" class="btn" type="submit" value="Update"/>
-		<input :class="css.input" v-on:click="resetModel('absen')" class="btn" type="submit" value="Reset"/>
-		<div>
-			<h1>Absensi</h1>
-			<table :class="css.table">
-				<tr>
-					<th v-for="lisShowCol in tableOrigin.absen" v-if="tableTampil.absen.includes(lisShowCol)" >{{lisShowCol}}</th>
-				</tr>
-				<tr v-for="(lisabsen, index) in absen.daftar">
-					<td  v-if="tableTampil.absen.includes('tanggal')"> {{ lisabsen[0] }} </td>
-					<td v-if="tableTampil.absen.includes('id')"> {{ lisabsen[1] }} </td>
-					<td v-if="tableTampil.absen.includes('nama')"> {{ findObj(lisabsen[1], karyawan.daftar, 1) }} </td>
-					<td v-if="tableTampil.absen.includes('divisi')"> {{ divisi.daftar[lisabsen[2]][0] }} </td>
-					<td v-if="tableTampil.absen.includes('bagian')"> {{ bagian.daftar[lisabsen[3]][0]}} </td>
-					<td v-if="tableTampil.absen.includes('masuk')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen[4]" :disabled="absen.id !== index"></td>
-					<td v-if="tableTampil.absen.includes('istirahat')"><input size="1" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen[5]" :disabled="absen.id !== index"></td>
-					<td v-if="tableTampil.absen.includes('keluar')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen[6]" :disabled="absen.id !== index"></td>
-					<td v-if="tableTampil.absen.includes('total')"> 
-						{{ Number(lisabsen[6].substring(0,2)) > Number(lisabsen[4].substring(0,2)) ? 
-							Number(lisabsen[6].substring(0,2)) - Number(lisabsen[4].substring(0,2)) -  lisabsen[5] :
-							Number(lisabsen[6].substring(0,2)) + 24 - Number(lisabsen[4].substring(0,2)) -  lisabsen[5]
-						}} 
-					</td>
-					<!--td v-if="tableTampil.absen.includes('normal')">{{ level.daftar[ findObj(lisabsen[1], karyawan.daftar, 0) ].jamKerja }}</td>
-					<td v-if="tableTampil.absen.includes('selisih')">{{ 
-						(Number(lisabsen[6].substring(0,2)) > Number(lisabsen[4].substring(0,2)) ? 
-						Number(lisabsen[6].substring(0,2)) - Number(lisabsen[4].substring(0,2)) -  lisabsen[5] :
-						Number(lisabsen[6].substring(0,2)) + 24 - Number(lisabsen[4].substring(0,2)) -  lisabsen[5]) 
-						-
-						(level.daftar[ findObj(lisabsen[1], karyawan.daftar, 1) ][1])
-					}}</td>
-					<td v-if="tableTampil.absen.includes('keterangan')"><input size="6" :class="absen.id !== index ? css.button : css.input" v-model="lisabsen[8]" :disabled="absen.id !== index"></td>
-					<td v-if="absen.id !== index && tableTampil.absen.includes('action') "><input :class="css.button" type="submit" value="edit" v-on:click="update2('absen', index)"/> </td>
-					<td v-if="absen.id == index && tableTampil.absen.includes('action')"><input :class="css.input" type="submit" value="save" v-on:click="simpan('absen')"/> </td-->
-				</tr>
-			</table>
-		</div>
-	</div>
- 
-</div>
- 
-</div>
-<!--script src="https://unpkg.com/vuejs-datepicker"></script-->
+
 <script type="text/javascript" src="../../../FrontEnd/script/vue.js"></script>
-<!--script type="text/javascript" src="vue-2.5.6.js"></script-->
- <!--script src="https://unpkg.com/vue-material"></script-->
-<!--script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script-->
-<!--script type="text/javascript" src="template.js"></script-->
+<script type="text/javascript" src="componen.js"></script>
 <script type="text/javascript" src="script.js"></script>
-<script>
- 
-</script>
 </body>
  
 </html>

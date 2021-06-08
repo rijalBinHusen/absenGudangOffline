@@ -30,8 +30,9 @@
 	<div v-bind:is="currentTabComponent" 
 	:datanya="deData[currentTab.toLowerCase()]" 
 	:icon="icon" 
-	@modal="modal = !modal"
-	class="w3-center w3-container w3-row w3-margin"
+	@modal="modalChange"
+	@edit="edit($event)"
+	class="w3-center w3-display-container w3-container w3-row w3-margin"
 	>
 
 	</div>
@@ -40,16 +41,22 @@
 	<div v-if="modal" style="display: block;" class="w3-modal">
 		<div class="w3-modal-content">
 		  <header class="w3-container w3-teal"> 
-			<span @click="modal = !modal"
-			class="w3-button w3-display-topright">&times;</span>
+			<span @click="modalChange"
+			class="w3-xlarge w3-button w3-display-topright">
+			&times;
+			</span>
 			<h2>Tambahkan {{currentTab.toLowerCase()}}</h2>
 		  </header>
 		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;">
-				<!--Panggil form component-->
+			<!--Panggil form component-->
 			  <form-content 
 			  :text="form[currentTab.toLowerCase()].text" 
 			  :field="currentTab.toLowerCase()" 
-			  @tambah="tambah($event)">
+			  :edit="deData[currentTab.toLowerCase()][deData.edit]"
+			  @tambah="tambah($event)"
+			  @modal="modalChange"
+			  @update="update($event)"
+			  >
 			  </form-content>
 		  </div>
 		</div>

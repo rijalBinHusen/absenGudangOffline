@@ -14,21 +14,21 @@ new Vue({
 	  deData: {
 		  home: jamSekarang(),
 		  divisi: ["Gudang depan", "Gudang sentral"],
+		  bagian: ["Admin", "Supervisor"],
 		  id: ""
 	  },
 	  form: {
-		  divisi: {
-			  text: 1
-		  }
+		  divisi: { text: 1 },
+		  bagian: {text: 1}
 	  }
 	},
 	methods: {
 		//untuk menambah record
 		tambah (dat) {
 			this.modal = false
-			if(this.currentTab.toLowerCase() == "divisi") {
+			if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
 				if(Object.values(dat)[0]) {
-					this.deData.divisi.push(Object.values(dat)[0])
+					this.deData[this.currentTab.toLowerCase()].push(Object.values(dat)[0])
 				}
 			}
 		},

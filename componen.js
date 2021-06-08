@@ -14,7 +14,18 @@ Vue.component("tab-divisi", {
 });
 
 Vue.component("tab-bagian", {
-	template: "<div>Bagian component</div>"
+	props: ["datanya", "icon"],
+    template: `<div class="w3-center">
+			<ul class="w3-ul">
+				<li class="w3-xlarge">Daftar Bagian <i :class="icon.plus" @click="$emit('modal')"></i></li>
+				<li v-for="(row, index) in datanya" class="w3-hover-light-gray">
+				{{row}}
+				<a @click="$emit('edit', index)" class="w3-right w3-tag w3-teal w3-round">
+				Edit <i :class="icon.pencil"></i>
+				</a>
+				</li>
+			</ul>
+	</div>`
 });
 
 Vue.component("tab-level", {

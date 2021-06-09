@@ -52,7 +52,7 @@
 			  <form-content 
 			  :text="form[currentTab.toLowerCase()].text" 
 			  :field="currentTab.toLowerCase()" 
-			  :edit="deData[currentTab.toLowerCase()][deData.edit]"
+			  :edit="Object.values(deData[currentTab.toLowerCase()][deData.edit])"
 			  @tambah="tambah($event)"
 			  @modal="modalChange"
 			  @update="update($event)"

@@ -13,13 +13,21 @@ new Vue({
 	  },
 	  deData: {
 		  home: jamSekarang(),
-		  divisi: ["Gudang depan", "Gudang sentral"],
-		  bagian: ["Admin", "Supervisor"],
+		  divisi: [
+			  {"divisi": "Gudang depan"}, {"divisi": "Gudang sentral"}
+			],
+		  bagian: [
+			  {"bagian": "Admin"}, { "bagian": "Supervisor"}
+			],
+		  level: [
+			  {"level": "kontrak", "jamKerja": 8}
+		  ],
 		  id: ""
 	  },
 	  form: {
 		  divisi: { text: 1 },
-		  bagian: {text: 1}
+		  bagian: {text: 1},
+		  level: {text: 2}
 	  }
 	},
 	methods: {
@@ -28,7 +36,7 @@ new Vue({
 			this.modal = false
 			if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
 				if(Object.values(dat)[0]) {
-					this.deData[this.currentTab.toLowerCase()].push(Object.values(dat)[0])
+					this.deData[this.currentTab.toLowerCase()].push([ Object.values(dat)[0] ])
 				}
 			}
 		},
@@ -37,10 +45,12 @@ new Vue({
 			this.modal = true
 			this.deData.edit = id
 		},
+		//buka tutup modal
 		modalChange () {
 			this.modal = !this.modal
 			this.deData.edit = ""
 		},
+		//update record
 		update(dat) {
 			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 1)  //hapus
 			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 0, dat.satu) //sisipkan

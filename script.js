@@ -3,13 +3,15 @@ function buatObjBaru (tab, obj) {
 		return {[tab]: obj.satu}
 	} else if (tab == "level") {
 		return {"level": obj.satu, "jamKerja": obj.dua}
+	} else if (tab == "karyawan") {
+		return {"nama": obj.satu, "divisi": obj.divisi, "bagian": obj.bagian, "level": obj.level}
 	}
 }
 
 new Vue({
 	el: "#utama",
 	data: {
-	  currentTab: "",
+	  currentTab: "Divisi",
 	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
 	  modal: false, //buka tutup modal
 	  clas : {
@@ -30,14 +32,15 @@ new Vue({
 			  {"level": "kontrak", "jamKerja": 8}
 		  ],
 		  karyawan: [
-			  {"nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0}
+			  {"nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0, "level":0}
 		  ],
 		  edit: ""
 	  },
 	  form: {
-		  divisi: { text: 1 },
-		  bagian: {text: 1},
-		  level: {text: 2}
+		  divisi: { "text": 1, "select": [] },
+		  bagian: {"text": 1, "select": []},
+		  level: {"text": 2, "select": []},
+		  karyawan: { "text": 1, "select": ["divisi", "bagian", "level"] }
 	  }
 	},
 	methods: {
@@ -73,7 +76,7 @@ new Vue({
 		  if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
 			  return "tab-list" 
 		  } else {
-			return "tab-table" 
+			return "tab-"+this.currentTab.toLowerCase() 
 		}
 	  },
 	  //siapin data yang akan diedit
@@ -89,34 +92,12 @@ new Vue({
 				"data": ["", "", "", ""]
 			}
 		}
-	  }
+	  },
+	  //untuk header table dikomponen
+	  headTable: function () {
+		return Object.keys(this.deData[this.currentTab.toLowerCase()][0])
+	  },
+	  //extract data dari object menjadi array
+	  
 	}
   });
-
-  function jamSekarang () {
-	//waktu baru
-	let base = new Date()
-
-	//dapatkan tahun, bulan, tanggal, jam, menit, hari
-	let tahun = base.getFullYear()
-	let bulan = base.getMonth()
-	let tanggal = base.getDate() > 9 ? base.getDate() : "0"+base.getDate()
-	let hari = base.getDay()
-	let jam = base.getHours() > 9 ? base.getHours() : "0"+base.getHours()
-	let menit = base.getMinutes() > 9 ? base.getMinutes() : "0"+base.getMinutes()
-
-	//arr hari, bulan
-	let arrHari = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-	let arrBulan = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"]
-
-	//kembailkan untuk ditampilkan
-	return dat = {
-		"tahun": tahun,
-		"bulan": arrBulan[bulan],
-		"tanggal": tanggal,
-		"hari": arrHari[hari],
-		"jam": jam,
-		"menit": menit
-	}
-
-}

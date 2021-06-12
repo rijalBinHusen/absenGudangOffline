@@ -30,6 +30,10 @@
 	<div v-bind:is="currentTabComponent" 
 	:datanya="deData[currentTab.toLowerCase()]" 
 	:icon="icon" 
+	:field="currentTab.toLowerCase()"
+	:bagian="deData.bagian"
+	:level="deData.level"
+	:divisi="deData.divisi"
 	@modal="modalChange()"
 	@edit="edit($event)"
 	class="w3-center w3-display-container w3-container w3-row w3-margin"
@@ -50,9 +54,12 @@
 		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;">
 			<!--Panggil form component-->
 			  <form-content 
-			  :text="form[currentTab.toLowerCase()].text" 
+			  :input="form[currentTab.toLowerCase()]" 
 			  :field="currentTab.toLowerCase()" 
 			  :edit="akanEdit"
+			  :bagian="deData.bagian"
+			  :level="deData.level"
+			  :divisi="deData.divisi"
 			  @tambah="tambah($event)"
 			  @modal="modalChange()"
 			  @update="update($event)"

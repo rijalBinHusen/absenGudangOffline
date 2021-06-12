@@ -1,8 +1,16 @@
+function buatObjBaru (tab, obj) {
+	if(tab == "divisi" || tab == "bagian") {
+		return {[tab]: obj.satu}
+	} else if (tab == "level") {
+		return {"level": obj.satu, "jamKerja": obj.dua}
+	}
+}
+
 new Vue({
 	el: "#utama",
 	data: {
-	  currentTab: "Home",
-	  tabs: ['Home', 'Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
+	  currentTab: "",
+	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
 	  modal: false, //buka tutup modal
 	  clas : {
 		navbar : 'w3-bar-item w3-button w3-hover-light-grey w3-padding'
@@ -12,7 +20,6 @@ new Vue({
 		  pencil: "fa fa-pencil w3-teal"
 	  },
 	  deData: {
-		  home: jamSekarang(),
 		  divisi: [
 			  {"divisi": "Gudang depan"}, {"divisi": "Gudang sentral"}
 			],
@@ -22,7 +29,10 @@ new Vue({
 		  level: [
 			  {"level": "kontrak", "jamKerja": 8}
 		  ],
-		  id: ""
+		  karyawan: [
+			  {"nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0}
+		  ],
+		  edit: ""
 	  },
 	  form: {
 		  divisi: { text: 1 },
@@ -34,10 +44,10 @@ new Vue({
 		//untuk menambah record
 		tambah (dat) {
 			this.modal = false
-			if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
-				if(Object.values(dat)[0]) {
-					this.deData[this.currentTab.toLowerCase()].push([ Object.values(dat)[0] ])
-				}
+			
+			//masukkan data jika tidak kosong
+			if(dat.satu) {
+				this.deData[this.currentTab.toLowerCase()].push( buatObjBaru(this.currentTab.toLowerCase(), dat))
 			}
 		},
 		//untuk edit, memasukkan record yang exist dan diupdate
@@ -53,14 +63,32 @@ new Vue({
 		//update record
 		update(dat) {
 			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 1)  //hapus
-			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 0, dat.satu) //sisipkan
+			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 0, buatObjBaru(this.currentTab.toLowerCase(), dat)) //sisipkan
 			this.modalChange()
 		}
 	},
 	computed: {
-		//Pindah pindah tab
+	  //Pindah pindah tab
 	  currentTabComponent: function() {
-		return "tab-" + this.currentTab.toLowerCase();
+		  if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
+			  return "tab-list" 
+		  } else {
+			return "tab-table" 
+		}
+	  },
+	  //siapin data yang akan diedit
+	  akanEdit: function () {
+		if (this.deData.edit !== "") {
+			return { 
+				"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
+				"data": Object.values(this.deData[this.currentTab.toLowerCase()][this.deData.edit])
+			}
+		} else {
+			return {
+				"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),	
+				"data": ["", "", "", ""]
+			}
+		}
 	  }
 	}
   });

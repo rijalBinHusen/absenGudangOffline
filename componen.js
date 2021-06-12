@@ -1,10 +1,10 @@
-Vue.component("tab-divisi", {
+Vue.component("tab-list", {
 	props: ["datanya", "icon"],
     template: `<div class="w3-center">
 			<ul class="w3-ul">
 				<li class="w3-xlarge">Daftar divisi <i :class="icon.plus" @click="$emit('modal')"></i></li>
 				<li v-for="(row, index) in datanya" class="w3-hover-light-gray">
-				{{row.divisi}}
+				{{Object.values(row)[0]}}
 				<a @click="$emit('edit', index)" class="w3-right w3-tag w3-teal w3-round">
 				Edit <i :class="icon.pencil"></i>
 				</a>
@@ -13,30 +13,15 @@ Vue.component("tab-divisi", {
 	</div>`
 });
 
-Vue.component("tab-bagian", {
-	props: ["datanya", "icon"],
-    template: `<div class="w3-center">
-			<ul class="w3-ul">
-				<li class="w3-xlarge">Daftar bagian <i :class="icon.plus" @click="$emit('modal')"></i></li>
-				<li v-for="(row, index) in datanya" class="w3-hover-light-gray">
-				{{row.bagian}}
-				<a @click="$emit('edit', index)" class="w3-right w3-tag w3-teal w3-round">
-				Edit <i :class="icon.pencil"></i>
-				</a>
-				</li>
-			</ul>
-	</div>`
-});
-
-Vue.component("tab-level", {
+Vue.component("tab-table", {
 	props: ["datanya", "icon"],
     template: `<div class="w3-center">
 		<span class="w3-xlarge">Daftar level karyawan <i :class="icon.plus" @click="$emit('modal')"></i></span>
 		<table class="w3-table w3-striped w3-border w3-margin-top">
-			<tr><th>Level</th><th>Total Jam kerja</th><th>Opsi</th<tr>
-			<tr v-for="(row, index) in datanya">
-				<td>{{row.level}}</td>
-				<td>{{row.jamKerja}}</td>
+			<tr class="w3-gray"><th>Level</th><th>Total Jam kerja</th><th>Opsi</th<tr>
+			<tr class="w3-hover-light-gray" v-for="(row, index) in datanya">
+				<td>{{Object.values(row)[0]}}</td>
+				<td>{{Object.values(row)[1]}}</td>
 				<td>
 				<a @click="$emit('edit', index)" class="w3-tag w3-teal w3-round">
 				Edit <i :class="icon.pencil"></i>
@@ -69,20 +54,20 @@ Vue.component("form-content", {
 	props: ["field", "text", "edit"],
 	data () {
 		return { 
-			satu: "",
-			dua: "",
-			tiga: "",
-			empat: ""
+			satu: this.edit.data[0],
+			dua: this.edit.data[1],
+			tiga: this.edit.data[2],
+			empat: this.edit.data[3]
 		}
 	},
 	template: `<div>
-		<input v-if="text >=1" :value="edit[0]" type="text" @input="satu = [$event.target.value]">
-		<input v-if="text >=2" :value="edit[1]" type="text" @input="dua = $event.target.value">
+		<input v-if="text >=1" type="text" :value="edit.data[0]" :placeholder="'Masukkan '+edit.holder[0]" @input="satu = $event.target.value">
+		<input v-if="text >=2" type="text" :value="edit.data[1]" :placeholder="'Masukkan '+edit.holder[1]" @input="dua = $event.target.value">
 		<input v-if="text >=3" type="text" @input="tiga = $event.target.value">
 		<input v-if="text >=4" type="text" @input="empat = $event.target.value">
 		
 		<!--Tombol untuk tambah record-->
-		<input v-if="!edit" class="w3-button w3-teal w3-round-large" type="submit" 
+		<input v-if="!edit.data[0]" class="w3-button w3-teal w3-round-large" type="submit" 
 		value="Tambah" 
 		@click="$emit('tambah', { 
 			'satu': satu ,
@@ -92,7 +77,7 @@ Vue.component("form-content", {
 		})">
 
 		<!--Tombol untuk update-->
-		<input v-if="edit" class="w3-button w3-teal w3-round-large" type="submit" 
+		<input v-if="edit.data[0]" class="w3-button w3-teal w3-round-large" type="submit" 
 		value="Update" 
 		@click="$emit('update', { 
 			'satu': satu ,

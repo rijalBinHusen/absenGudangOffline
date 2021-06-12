@@ -30,7 +30,7 @@
 	<div v-bind:is="currentTabComponent" 
 	:datanya="deData[currentTab.toLowerCase()]" 
 	:icon="icon" 
-	@modal="modalChange"
+	@modal="modalChange()"
 	@edit="edit($event)"
 	class="w3-center w3-display-container w3-container w3-row w3-margin"
 	>
@@ -52,9 +52,9 @@
 			  <form-content 
 			  :text="form[currentTab.toLowerCase()].text" 
 			  :field="currentTab.toLowerCase()" 
-			  :edit="Object.values(deData[currentTab.toLowerCase()][deData.edit])"
+			  :edit="akanEdit"
 			  @tambah="tambah($event)"
-			  @modal="modalChange"
+			  @modal="modalChange()"
 			  @update="update($event)"
 			  >
 			  </form-content>

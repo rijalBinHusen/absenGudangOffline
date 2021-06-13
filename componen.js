@@ -42,7 +42,7 @@ Vue.component("pilih", {
 	props: ["datanya", "pilih"],
 	template: `
 	<select @change="$emit('ganti', $event.target.value)">
-		<option value="null">{{'Pilih '+ Object.keys(datanya[0])[0]}}</option>
+		<option value="kosong">{{'Pilih '+ Object.keys(datanya[0])[0]}}</option>
 		<option :selected="pilih == index" v-for="(row, index) in datanya" :value="index">
 		{{Object.values(row)[0]}}
 		</option>
@@ -72,9 +72,9 @@ Vue.component("tab-karyawan", {
 			
 			<tr class="w3-hover-light-gray" v-for="(row, index) in datanya">
 				<td>{{row.nama}}</td>
-				<td>{{Object.values(divisi[row.divisi])[0]}}</td>
-				<td>{{Object.values(bagian[row.bagian])[0]}}</td>
-				<td>{{Object.values(level[row.level])[0]}}</td>
+				<td>{{row.divisi !== "kosong" ? Object.values(divisi[row.divisi])[0] : "kosong"}}</td>
+				<td>{{row.bagian !== "kosong" ? Object.values(bagian[row.bagian])[0] : "kosong"}}</td>
+				<td>{{row.level !== "kosong" ? Object.values(level[row.level])[0] : "kosong"}}</td>
 				<td>
 				<a @click="$emit('edit', index)" class="w3-tag w3-teal w3-round">
 				Edit <i :class="icon.pencil"></i>
@@ -148,7 +148,6 @@ Vue.component("form-karyawan", {
 
 		<!--Tombol untuk tambah record-->
 		<input v-if="!edit.data.nama" class="w3-button w3-teal w3-round-large" type="submit" 
-		:disabled="nama == null || divisiBaru == null || bagianBaru == null || levelBaru == null"
 		value="Tambah" 
 		@click="$emit('tambah', {
 			'nama': nama,
@@ -159,7 +158,7 @@ Vue.component("form-karyawan", {
 
 		<!--Tombol untuk update-->
 		<input v-if="edit.data.nama" class="w3-button w3-teal w3-round-large" type="submit" 
-		value="Update" 
+		value="Update"
 		@click="$emit('update', { 
 			'nama': nama,
 			'divisi': divisiBaru,

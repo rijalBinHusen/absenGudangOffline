@@ -46,12 +46,13 @@ new Vue({
 	methods: {
 		//untuk menambah record
 		tambah (dat) {
-			this.modal = false
 			
 			//masukkan data jika tidak kosong
-			if(dat.satu || dat.nama) {
+			if(dat.satu || dat.divisi && dat.level && dat.bagian) {
 				this.deData[this.currentTab.toLowerCase()].push( buatObjBaru(this.currentTab.toLowerCase(), dat))
 			}
+			
+			this.modal = false
 		},
 		//untuk edit, memasukkan record yang exist dan diupdate
 		edit (id) {
@@ -103,7 +104,7 @@ new Vue({
 			} else {
 				return {
 					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),
-					"data": {"nama": null, "bagian": null, "level": null, "divisi": null}
+					"data": {"nama": "", "bagian": "kosong", "level": "kosong", "divisi": "kosong"}
 				}
 			}
 		}

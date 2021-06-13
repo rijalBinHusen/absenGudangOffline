@@ -4,7 +4,7 @@ function buatObjBaru (tab, obj) {
 	} else if (tab == "level") {
 		return {"level": obj.satu, "jamKerja": obj.dua}
 	} else if (tab == "karyawan") {
-		return {"nama": obj.satu, "divisi": obj.divisi, "bagian": obj.bagian, "level": obj.level}
+		return {"nama": obj.nama, "divisi": obj.divisi, "bagian": obj.bagian, "level": obj.level}
 	}
 }
 
@@ -49,7 +49,7 @@ new Vue({
 			this.modal = false
 			
 			//masukkan data jika tidak kosong
-			if(dat.satu) {
+			if(dat.satu || dat.nama) {
 				this.deData[this.currentTab.toLowerCase()].push( buatObjBaru(this.currentTab.toLowerCase(), dat))
 			}
 		},
@@ -81,21 +81,40 @@ new Vue({
 	  },
 	  //siapin data yang akan diedit
 	  akanEdit: function () {
-		if (this.deData.edit !== "") {
-			return { 
-				"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
-				"data": Object.values(this.deData[this.currentTab.toLowerCase()][this.deData.edit])
+	  if(this.currentTab.toLowerCase() == "bagian" || this.currentTab.toLowerCase() == "level" || this.currentTab.toLowerCase() == "divisi" )
+		  { 
+			if (this.deData.edit !== "") {
+				return { 
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
+					"data": Object.values(this.deData[this.currentTab.toLowerCase()][this.deData.edit])
+				}
+			} else {
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),	
+					"data": ["", "", "", ""]
+				}
 			}
 		} else {
-			return {
-				"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),	
-				"data": ["", "", "", ""]
+			if(this.deData.edit !== "") {
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
+					"data": this.deData[this.currentTab.toLowerCase()][this.deData.edit]
+				}
+			} else {
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),
+					"data": {"nama": null, "bagian": null, "level": null, "divisi": null}
+				}
 			}
 		}
 	  },
-	  //untuk header table dikomponen
-	  headTable: function () {
-		return Object.keys(this.deData[this.currentTab.toLowerCase()][0])
+	  //untuk panggil form input
+	  currentForm: function () {
+		if(this.currentTab.toLowerCase() == "bagian" || this.currentTab.toLowerCase() == "level" || this.currentTab.toLowerCase() == "divisi" ) {
+			return "form-universal"
+		} else {
+			return "form-"+this.currentTab.toLowerCase()
+		}
 	  },
 	  //extract data dari object menjadi array
 	  

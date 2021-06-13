@@ -39,11 +39,13 @@ Vue.component("tab-level", {
 });
 
 Vue.component("pilih", {
-	props: ["datanya"],
+	props: ["datanya", "pilih"],
 	template: `
 	<select @change="$emit('ganti', $event.target.value)">
 		<option value="null">{{'Pilih '+ Object.keys(datanya[0])[0]}}</option>
-		<option v-for="(row, index) in datanya" :value="index">{{Object.values(row)[0]}}</option>
+		<option :selected="pilih == index" v-for="(row, index) in datanya" :value="index">
+		{{Object.values(row)[0]}}
+		</option>
 	</select>
 	`
 })
@@ -96,28 +98,17 @@ Vue.component("tab-home", {
 	</div>`
 });
 
-Vue.component("form-content", {
-	props: ["field", "input", "edit", "bagian", "divisi", "level"],
+Vue.component("form-universal", {
+	props: ["field", "input", "edit"],
 	data () {
 		return { 
 			satu: this.edit.data[0],
 			dua: this.edit.data[1],
-			tiga: this.edit.data[2],
-			empat: this.edit.data[3],
-			divisiBaru: "",
-			bagianBaru: "",
-			levelBaru: ""
 		}
 	},
 	template: `<div>
 		<input v-if="input.text >=1" type="text" :value="edit.data[0]" :placeholder="'Masukkan '+edit.holder[0]" @input="satu = $event.target.value">
 		<input v-if="input.text >=2" type="text" :value="edit.data[1]" :placeholder="'Masukkan '+edit.holder[1]" @input="dua = $event.target.value">
-		<input v-if="input.text >=3" type="text" :value="edit.data[2]" :placeholder="'Masukkan '+edit.holder[2]" @input="tiga = $event.target.value">
-		<input v-if="input.text >=4" type="text" :value="edit.data[3]" :placeholder="'Masukkan '+edit.holder[3]" @input="empat = $event.target.value">
-		
-		<pilih @ganti="divisiBaru = $event" v-if="input.select.includes('divisi')" :datanya="divisi"></pilih>
-		<pilih @ganti="bagianBaru = $event" v-if="input.select.includes('bagian')" :datanya="bagian"></pilih>
-		<pilih @ganti="levelBaru = $event" v-if="input.select.includes('level')" :datanya="level"></pilih>
 
 		<!--Tombol untuk tambah record-->
 		<input v-if="!edit.data[0]" class="w3-button w3-teal w3-round-large" type="submit" 
@@ -125,11 +116,6 @@ Vue.component("form-content", {
 		@click="$emit('tambah', { 
 			'satu': satu ,
 			'dua': dua,
-			'tiga': tiga,
-			'empat': empat,
-			'divisi': divisiBaru,
-			'bagian': bagianBaru,
-			'level': levelBaru
 		})">
 
 		<!--Tombol untuk update-->
@@ -138,9 +124,47 @@ Vue.component("form-content", {
 		@click="$emit('update', { 
 			'satu': satu ,
 			'dua': dua,
-			'tiga': tiga,
-			'empat': empat
 		})">
     </div>`
 })
 
+
+Vue.component("form-karyawan", {
+	props: ["edit", "bagian", "divisi", "level"],
+	data () {
+		return { 
+			nama: this.edit.data.nama,
+			divisiBaru: this.edit.data.divisi,
+			bagianBaru: this.edit.data.bagian,
+			levelBaru: this.edit.data.level
+		}
+	},
+	template: `<div>
+		<input type="text" :value="nama" :placeholder="'Masukkan '+edit.holder[0]" @input="nama = $event.target.value">
+		
+		<pilih @ganti="divisiBaru = $event" :pilih="divisiBaru" :datanya="divisi"></pilih>
+		<pilih @ganti="bagianBaru = $event" :pilih="bagianBaru" :datanya="bagian"></pilih>
+		<pilih @ganti="levelBaru = $event" :pilih="levelBaru" :datanya="level"></pilih>
+
+		<!--Tombol untuk tambah record-->
+		<input v-if="!edit.data.nama" class="w3-button w3-teal w3-round-large" type="submit" 
+		:disabled="nama == null || divisiBaru == null || bagianBaru == null || levelBaru == null"
+		value="Tambah" 
+		@click="$emit('tambah', {
+			'nama': nama,
+			'divisi': divisiBaru,
+			'bagian': bagianBaru,
+			'level': levelBaru
+		})">
+
+		<!--Tombol untuk update-->
+		<input v-if="edit.data.nama" class="w3-button w3-teal w3-round-large" type="submit" 
+		value="Update" 
+		@click="$emit('update', { 
+			'nama': nama,
+			'divisi': divisiBaru,
+			'bagian': bagianBaru,
+			'level': levelBaru
+		})">
+    </div>`
+})

@@ -51,20 +51,21 @@
 			</span>
 			<h2>Tambahkan {{currentTab.toLowerCase()}}</h2>
 		  </header>
-		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;">
+		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;"
+		   v-bind:is="currentForm"
+		   :input="form[currentTab.toLowerCase()]"
+		   :edit="akanEdit"
+		   :bagian="deData.bagian"
+		   :level="deData.level"
+		   :divisi="deData.divisi"
+		   @tambah="tambah($event)"
+		   @modal="modalChange()"
+		   @update="update($event)"
+		  >
 			<!--Panggil form component-->
-			  <form-content 
-			  :input="form[currentTab.toLowerCase()]" 
-			  :field="currentTab.toLowerCase()" 
-			  :edit="akanEdit"
-			  :bagian="deData.bagian"
-			  :level="deData.level"
-			  :divisi="deData.divisi"
-			  @tambah="tambah($event)"
-			  @modal="modalChange()"
-			  @update="update($event)"
+			  <!--form-content 
 			  >
-			  </form-content>
+			  </form-content-->
 		  </div>
 		</div>
 	</div>

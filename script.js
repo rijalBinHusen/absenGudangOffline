@@ -3,9 +3,51 @@ function buatObjBaru (tab, obj) {
 		return {[tab]: obj.satu}
 	} else if (tab == "level") {
 		return {"level": obj.satu, "jamKerja": obj.dua}
-	} else if (tab == "karyawan") {
-		return {"nama": obj.nama, "divisi": obj.divisi, "bagian": obj.bagian, "level": obj.level}
+	} else if (tab == "karyawan" || tab == "absen") {
+		return obj
+	} 
+}
+
+function ObjKaryawanAbsen(obj) {
+	let kosong = {}
+	for (i=0; i < obj.length; i++) {
+		kosong[obj[i].id] = obj[i]
 	}
+	return kosong
+	
+}
+
+function cekJam (jam) {
+	return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(jam) //return true or false
+}
+
+function cekDate(date) {
+	return Boolean(new Date(date).getTime())
+}
+
+function cari (obj, criteria) {
+	//obj = [ {"id": 1, "item1": "item content item content"} ]
+	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+
+	let result = []
+	if(criteria.equalTo) {
+		for (x in obj) {
+			if(obj[x][equalTo[0]] == equalTo[1]) { //jika sama
+				result.push(obj.x)
+			}
+		}
+	}
+	return result
+}
+
+function tulisanBaku (str) {
+	let hasil;
+
+	let res = str.replace(/([A-Z])/g,' $1');//sisipkan sapasi sebelum huruf besar ditenghah
+	hasil = res[0].toUpperCase()
+	hasil += res.slice(1)
+
+	return hasil
 }
 
 new Vue({
@@ -32,7 +74,21 @@ new Vue({
 			  {"level": "kontrak", "jamKerja": 8}
 		  ],
 		  karyawan: [
-			  {"nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0, "level":0}
+			  {"id": 12039, "nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0, "level":0}
+		  ],
+		  absen: [
+			  {
+			  "tanggal": "2021-12-19", 
+			  "masuk": "22:23", 
+			  "istirahat": 1, 
+			  "keluar": "07:53", 
+			  "idKaryawan": 12039, 
+			   "total": 8, 
+			   "keterangan": "tes",
+			   "nama": "Rijal bin Husen",
+			   "divisi": 0,
+			   "bagian": 0
+			}
 		  ],
 		  edit: ""
 	  },
@@ -40,7 +96,8 @@ new Vue({
 		  divisi: { "text": 1, "select": [] },
 		  bagian: {"text": 1, "select": []},
 		  level: {"text": 2, "select": []},
-		  karyawan: { "text": 1, "select": ["divisi", "bagian", "level"] }
+		  karyawan: {  },
+		  absen: {  }
 	  }
 	},
 	methods: {
@@ -48,7 +105,7 @@ new Vue({
 		tambah (dat) {
 			
 			//masukkan data jika tidak kosong
-			if(dat.satu || dat.divisi && dat.level && dat.bagian) {
+			if(dat.satu || dat.divisi && dat.level && dat.bagian || dat.nama) {
 				this.deData[this.currentTab.toLowerCase()].push( buatObjBaru(this.currentTab.toLowerCase(), dat))
 			}
 			
@@ -102,9 +159,27 @@ new Vue({
 					"data": this.deData[this.currentTab.toLowerCase()][this.deData.edit]
 				}
 			} else {
+				//data karyawan
 				return {
 					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),
-					"data": {"nama": "", "bagian": "kosong", "level": "kosong", "divisi": "kosong"}
+					"data": {
+						"id": "", 
+						"nama": "", 
+						"bagian": "kosong", 
+						"level": "kosong", 
+						"divisi": "kosong", 
+						"jamKerja": "",
+						"tanggal": "", 
+			  			"masuk": "", 
+			  			"istirahat": "", 
+			  			"keluar": "", 
+			  			"idKaryawan": "", 
+			   			"total": "", 
+			   			"keterangan": "",
+			   			"nama": "",
+			   			"normal": "",
+			   			"selisih":""
+					}
 				}
 			}
 		}
@@ -117,7 +192,9 @@ new Vue({
 			return "form-"+this.currentTab.toLowerCase()
 		}
 	  },
-	  //extract data dari object menjadi array
-	  
+	  //siapkkan absen untuk ditampilkan
+	  karyawanSiap: function() {
+		return ObjKaryawanAbsen(this.deData.karyawan)
+	  }
 	}
   });

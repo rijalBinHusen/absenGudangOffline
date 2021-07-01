@@ -141,7 +141,7 @@ Vue.component("tab-absen", {
 	<div class="w3-center">
 	<span class="w3-xlarge">Absensi <i :class="icon.plus" @click="$emit('modal')"></i></span>
 
-	<table class="w3-table w3-striped w3-border w3-margin-top">
+	<!--table class="w3-table w3-striped w3-border w3-margin-top">
 		<tr class="w3-teal">
 			<th @click="console.log(tanggal)"><selectCheckboxes v-model="tanggal" :datanya="datanya" :ind="'tanggal'"></selectCheckboxes></th>
 			<th><selectCheckboxes :datanya="datanya" :ind="'idKaryawan'"></selectCheckboxes></th>
@@ -177,7 +177,17 @@ Vue.component("tab-absen", {
 			</a>
 			</td>
 		</tr>
-	</table>
+	</table-->
+			<datatable 
+			:heads="['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'keluar', 'total', 'idKaryawan', 'keterangan']" 
+			:datanya="datanya"
+			:option="['edit', 'delete']"
+			:keydata="'idKaryawan'"
+			@edit="show($event)"
+			@delete="show($event)"
+			@detail="show($event)"
+			>
+			</datatable>
 </div>`
 });
 

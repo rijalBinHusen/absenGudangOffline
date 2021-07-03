@@ -12,7 +12,7 @@
 <div id="utama">
 
 	<!--Navbar-->
-	<div class="w3-center w3-teal w3-card-4 w3-top">
+	<div id="navbar" class="w3-center w3-teal w3-card-4 w3-top">
 		<!--Tombol navigasi bar-->
 		<span class="w3-bar">
 			<button
@@ -76,13 +76,28 @@
 </div>
 
 <script type="text/javascript" src="../../../FrontEnd/script/vue.js"></script>
-<script type="text/javascript" src="../../datatable/datatable.js"></script>
+<script type="text/javascript" src="datatable.js"></script>
 <script type="text/javascript" src="componen.js"></script>
 <script type="text/javascript" src="script.js"></script>
 <script>
-	window.addEventListener('resize', function(event) {
-    console.log(window.innerWidth)
-	}, true);
+	// window.addEventListener('resize', function(event) {
+    // console.log(window.innerWidth)
+	// }, true);
+
+let lastScrollTop = 0,
+navbar = document.getElementById('navbar');
+
+window.addEventListener("scroll", function() {
+	var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+	if (scrollTop > lastScrollTop) {
+		navbar.style.top = "-80px";
+	} else {
+		navbar.style.top= "0";
+	}
+	lastScrollTop = scrollTop;
+
+});
+
 </script>
 </body>
  

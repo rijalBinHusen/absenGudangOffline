@@ -88,7 +88,67 @@ new Vue({
 			   "nama": "Rijal bin Husen",
 			   "divisi": 0,
 			   "bagian": 0
-			}
+			},
+			{
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  }
 		  ],
 		  edit: ""
 	  },

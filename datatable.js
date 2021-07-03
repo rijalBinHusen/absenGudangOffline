@@ -30,12 +30,13 @@ Vue.component("datatable", {
                     condition = []
 
                     this.searchKey.map( (key, index) => {
-                        if (val[key].toLowerCase().includes(this.searchInput[index].toLowerCase())) {
-                            condition.push(true)
+
+                        if(isNaN(val[key])) { //if the value is string not a number
+                            val[key].toLowerCase().includes(this.searchInput[index].toLowerCase()) ? condition.push(true) : condition.push(false)
+                        } else {
+                            val[key] == this.searchInput[index] ? condition.push(true) : condition.push(false)
                         }
-                        else {
-                            condition.push(false)
-                        }
+                        
                     })
 
                     if(!condition.includes(false)) {
@@ -120,10 +121,10 @@ Vue.component("datatable", {
     template: `
     <div>
     <!-- pagination length & form -->
-        <div class="row"> 
-            <nav class="col">
-            Show entries
-                <select @change="changeRow($event.target.value)">
+        <div class="w3-row"> 
+            <nav class="w3-left">
+            <h3>Show entries</h3>
+                <select class="w3-select" @change="changeRow($event.target.value)">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -140,8 +141,7 @@ Vue.component("datatable", {
 
     <!-- data Table -->
 
-        <table class="w3-table w3-striped w3-border w3-margin-top">
-            <thead>
+        <table class="w3-table w3-striped w3-border">
             <tr class="w3-teal">
                 <th scope="col">No</th>
                 <th v-for="head in heads" 
@@ -154,42 +154,42 @@ Vue.component("datatable", {
                 </th>
                 <th v-if="option.length > 0" scope="col">Option</th>
             </tr>
-            </thead>
 
             <!--search form-->
             <tr>
                 <td></td>
                 <td v-for="key in heads">
                     <input type="text" 
-                    style="max-width:90px;"
+                    style="max-width:80px;" 
                     placeholder="Search" 
                     @change="searchWord($event.target.value, key)">
                 </td>
             </tr>
             <!--end ofsearch form-->
 
-            <tr v-for="(r, index) in showRow">
-                <th >{{index+startRow+1}}</th>
+            <tr class="w3-border" v-for="(r, index) in showRow">
+                <th scope="row">{{index+startRow+1}}</th>
                 <td v-for="key in heads">{{r[key]}}</td>
+                
                 <td v-if="option.length > 0">
                     <button 
                     @click="$emit('edit', r[keydata])" 
                     v-if="option.includes('edit')" 
-                    class="w3-button w3-round w3-teal">
+                    class="w3-teal w3-button">
                         Edit
                     </button>
                     
                     <button 
                     @click="$emit('delete', r[keydata])" 
                     v-if="option.includes('delete')" 
-                    class="w3-button w3-round w3-pink">
+                    class="w3-button w3-pink">
                         Delete
                     </button>
 
                     <button 
                     @click="$emit('detail', r[keydata])" 
                     v-if="option.includes('detail')" 
-                    class="w3-button w3-round w3-pale-blue">
+                    class="w3-button w3-pale-blue">
                         Detail
                     </button>
                 </td>
@@ -201,25 +201,36 @@ Vue.component("datatable", {
         
         <!--Pagination button and info of qty item-->
         
-        <div class="row">
-            <span class="col">
+        <div class="w3-margin-top">
+            <span class="w3-left">
                 <p>{{startRow+1}} - {{startRow+Number(lengthRow) < rowLenght ? startRow+Number(lengthRow) : rowLenght}} of {{rowLenght}} item</p>
             </span>
-            <nav class="col" aria-label="Page navigation example">
-                <ul class="pagination justify-content-end">
-                <li :class="['page-item', currentPage == 0 || currentPage == 1 ? 'disabled' : '']">
-                    <a class="page-link" @click="toThePage(currentPage-1)" aria-disabled="true">Previous</a>
-                </li>
 
-                <li :class="['page-item', currentPage == p || p == 1 && currentPage == 0 ? 'active' : '' ]" v-for="p in totalPage">
-                    <a class="page-link" @click="toThePage(p)" href="#">{{p}}</a>
-                </li>
+            <div class="w3-bar w3-border w3-round w3-right">
+                <a href="#" 
+                @click="toThePage(currentPage-1)" 
+                :class="['w3-bar-item', 'w3-button', currentPage == 0 || currentPage == 1 ? 'w3-disabled' : '']"
+                >
+                    &laquo;
+                </a>
 
-                <li :class="['page-item', startRow+Number(lengthRow) >= rowLenght ? 'disabled' : '']">
-                    <a class="page-link" @click="toThePage(currentPage == 0 ? 2 : currentPage+1)" aria-disabled="true">Next</a>
-                </li>
-                </ul>
-            </nav>
+                <a href="#" 
+                :class="['w3-bar-item', 'w3-button', currentPage == p || p == 1 && currentPage == 0 ? 'w3-teal' : '' ]" 
+                v-for="p in totalPage"
+                @click="toThePage(p)"
+                >
+                    {{p}}
+                </a>
+
+                <a href="#" 
+                :class="['w3-bar-item', 'w3-button', startRow+Number(lengthRow) >= rowLenght ? 'w3-disabled' : '']"
+                @click="toThePage(currentPage == 0 ? 2 : currentPage+1)"
+                >
+                    &raquo;
+                </a>
+
+            </div>
+
         </div>
 
         <!--End of pagination button and info of qty item-->

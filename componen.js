@@ -139,55 +139,23 @@ Vue.component("tab-absen", {
 	},
 	template: `
 	<div class="w3-center">
-	<span class="w3-xlarge">Absensi <i :class="icon.plus" @click="$emit('modal')"></i></span>
+	<span class="w3-xlarge"> 
+		Absensi <i :class="icon.plus" @click="$emit('modal')"> </i>
+	</span>
 
-	<!--table class="w3-table w3-striped w3-border w3-margin-top">
-		<tr class="w3-teal">
-			<th @click="console.log(tanggal)"><selectCheckboxes v-model="tanggal" :datanya="datanya" :ind="'tanggal'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'idKaryawan'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'nama'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'divisi'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'bagian'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'masuk'"></selectCheckboxes></th>
-			<th>Istirahat</th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'keluar'"></selectCheckboxes></th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'total'"></selectCheckboxes></th>
-			<th>Normal</th>
-			<th>Selisih</th>
-			<th><selectCheckboxes :datanya="datanya" :ind="'keterangan'"></selectCheckboxes></th>
-			<th>Opsi</th>
-		<tr>
-		
-		<tr class="w3-hover-light-gray" v-for="(row, index) in datanya">
-			<td class="absen-tanggal">{{row.tanggal}}</td>
-			<td>{{row.idKaryawan}}</td>
-			<td>{{row.nama}}</td>
-			<td>{{divisi[row.divisi].divisi}}</td>
-			<td>{{bagian[row.bagian].bagian}}</td>
-			<td>{{row.masuk}}</td>
-			<td>{{row.istirahat}}</td>
-			<td>{{row.keluar}}</td>
-			<td>{{row.total}}</td>
-			<td>{{level[ karyawan[Number(row.idKaryawan)].level ].jamKerja}}</td>
-			<td>{{row.total - level[ karyawan[Number(row.idKaryawan)].level ].jamKerja - row.istirahat}}</td>
-			<td>{{row.keterangan}}</td>
-			<td>
-			<a @click="$emit('edit', index)" class="w3-tag w3-teal w3-round">
-			Edit <i :class="icon.pencil"></i>
-			</a>
-			</td>
-		</tr>
-	</table-->
-			<datatable 
-			:heads="['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'keluar', 'total', 'idKaryawan', 'keterangan']" 
-			:datanya="datanya"
-			:option="['edit', 'delete']"
-			:keydata="'idKaryawan'"
-			@edit="show($event)"
-			@delete="show($event)"
-			@detail="show($event)"
-			>
-			</datatable>
+	<hr/>
+
+	<datatable 
+	:heads="['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'keluar', 'total', 'idKaryawan', 'keterangan']" 
+	:datanya="datanya"
+	:option="['edit', 'delete']"
+	:keydata="'idKaryawan'"
+	@edit="show($event)"
+	@delete="show($event)"
+	@detail="show($event)"
+	>
+	</datatable>
+	
 </div>`
 });
 

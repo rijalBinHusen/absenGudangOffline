@@ -56,9 +56,6 @@ new Vue({
 	  currentTab: "Divisi",
 	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
 	  modal: false, //buka tutup modal
-	  clas : {
-		navbar : 'w3-bar-item w3-button w3-hover-light-grey w3-padding'
-	  },
 	  icon: {
 		  plus: "fa fa-plus w3-button w3-round-large w3-teal",
 		  pencil: "fa fa-pencil w3-teal"
@@ -151,13 +148,6 @@ new Vue({
 			  }
 		  ],
 		  edit: ""
-	  },
-	  form: {
-		  divisi: { "text": 1, "select": [] },
-		  bagian: {"text": 1, "select": []},
-		  level: {"text": 2, "select": []},
-		  karyawan: {  },
-		  absen: {  }
 	  }
 	},
 	methods: {
@@ -190,12 +180,11 @@ new Vue({
 	},
 	computed: {
 	  //Pindah pindah tab
-	  currentTabComponent: function() {
-		  if(this.currentTab.toLowerCase() == "divisi" || this.currentTab.toLowerCase() == "bagian") {
-			  return "tab-list" 
-		  } else {
+	  currentTabComponent () {
 			return "tab-"+this.currentTab.toLowerCase() 
-		}
+	  },
+	  currentFormComponent () {
+			return "form-"+this.currentTab.toLowerCase() 
 	  },
 	  //siapin data yang akan diedit
 	  akanEdit: function () {
@@ -217,6 +206,7 @@ new Vue({
 				return {
 					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
 					"data": this.deData[this.currentTab.toLowerCase()][this.deData.edit]
+					
 				}
 			} else {
 				//data karyawan

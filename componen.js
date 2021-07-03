@@ -1,4 +1,4 @@
-Vue.component("tab-list", {
+/*Vue.component("tab-list", {
 	props: ["datanya", "icon", "field"],
     template: `<div class="w3-center">
 			<ul class="w3-ul">
@@ -149,10 +149,10 @@ Vue.component("tab-absen", {
 	:heads="['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'keluar', 'total', 'idKaryawan', 'keterangan']" 
 	:datanya="datanya"
 	:option="['edit', 'delete']"
-	:keydata="'idKaryawan'"
-	@edit="show($event)"
-	@delete="show($event)"
-	@detail="show($event)"
+	:keydata="'index'"
+	@edit="$emit('edit', $event)"
+	@delete="$emit('delete', $event)"
+	@detail="$emit('detail', $event)"
 	>
 	</datatable>
 	
@@ -244,7 +244,7 @@ Vue.component("form-karyawan", {
 })
 
 Vue.component("form-absen", {
-	props: ["edit", "karyawan", "level"],
+	props: ["edit", "karyawan", "level", "bagian", "divisi"],
 	data () {
 		return { 
 			dataBaru : {
@@ -324,4 +324,4 @@ Vue.component("form-absen", {
 		@click="$emit('update', dataBaru)">
 		</div>
 		`
-})
+})*/

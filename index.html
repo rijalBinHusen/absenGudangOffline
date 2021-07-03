@@ -19,7 +19,7 @@
 			v-for="tab in tabs"
 			v-bind:key="tab"
 			v-on:click="currentTab = tab"
-			v-bind:class="clas.navbar"
+			v-bind:class="['w3-bar-item', 'w3-button', 'w3-hover-light-grey', 'w3-padding', currentTab == tab ? 'w3-white' : '']"
 			>
         	{{ tab }}
 			</button>
@@ -28,18 +28,20 @@
 	<br><br><br>
 
 	<!--Arena utama-->
-	<div v-bind:is="currentTabComponent" 
+	<div 
+	v-bind:is="currentTabComponent" 
 	:datanya="deData[currentTab.toLowerCase()]" 
 	:icon="icon" 
-	:field="currentTab.toLowerCase()"
+	@edit="edit($event)"
+	@modal="modalChange()"
+	class="w3-center w3-display-container w3-container w3-row w3-margin"
+	>
+	<!--:field="currentTab.toLowerCase()"
 	:bagian="deData.bagian"
 	:level="deData.level"
 	:divisi="deData.divisi"
 	:karyawan="karyawanSiap"
-	@modal="modalChange()"
-	@edit="edit($event)"
-	class="w3-center w3-display-container w3-container w3-row w3-margin"
-	>
+	@modal="modalChange()"-->
 
 	</div>
 
@@ -53,20 +55,24 @@
 			</span>
 			<h2>Tambahkan {{currentTab.toLowerCase()}}</h2>
 		  </header>
-		  <div class="w3-container w3-padding w3-center margin-top" style="height: 300px;"
-		   v-bind:is="currentForm"
-		   :input="form[currentTab.toLowerCase()]"
-		   :edit="akanEdit"
-		   :bagian="deData.bagian"
-		   :level="deData.level"
-		   :divisi="deData.divisi"
-		   :karyawan="deData.karyawan"
-		   @tambah="tambah($event)"
-		   @modal="modalChange()"
-		   @update="update($event)"
+		  <div 
+		  class="w3-container w3-padding w3-center margin-top" 
+		  style="height: 300px;"
+		  v-bind:is="currentFormComponent"
 		  >
-			<!--Panggil form component-->
-			  <!--form-content 
+		  asdfasdfasfasdfasdfasdfasdfasdfasfasfdasdfasdfsadfsdf
+		  <!--Panggil form component-->
+		  <!--form-content 
+			v-bind:is="currentForm"
+			:input="form[currentTab.toLowerCase()]"
+			:edit="akanEdit"
+			:bagian="deData.bagian"
+			:level="deData.level"
+			:divisi="deData.divisi"
+			:karyawan="deData.karyawan"
+			@tambah="tambah($event)"
+			@modal="modalChange()"
+			@update="update($event)"
 			  >
 			  </form-content-->
 		  </div>
@@ -76,6 +82,7 @@
 </div>
 
 <script type="text/javascript" src="../../../FrontEnd/script/vue.js"></script>
+<script type="text/javascript" src="comp_Divisi.js"></script>
 <script type="text/javascript" src="datatable.js"></script>
 <script type="text/javascript" src="componen.js"></script>
 <script type="text/javascript" src="script.js"></script>

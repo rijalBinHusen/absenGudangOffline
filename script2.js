@@ -11,10 +11,13 @@ new Vue({
 	  datanyaForm: '',
 	  deData: {
 		  divisi: [ {"idDivisi": 'div1', "divisi": "Gudang depan"}, {"idDivisi": "div2", "divisi": "Gudang sentral"} ],
-          bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ]
+          bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ],
+          level: [ {"idLevel": "lev1" ,"level": "kontrak", "jamKerja": 8} ],
 	  },
       keyData: {
-          divisi: 'idDivisi'
+          divisi: 'idDivisi',
+          bagian: 'idBagian',
+          level: 'idLevel'
       }
 	},
 	methods: {

@@ -1,5 +1,5 @@
 Vue.component("datatable", {
-	props: ["datanya", "heads", "option","keydata"],
+	props: ["datanya", "heads", "option","keydata", "icon"],
     data () {
         return {
             startRow: 0,
@@ -168,16 +168,22 @@ Vue.component("datatable", {
             <!--end ofsearch form-->
 
             <tr class="w3-border" v-for="(r, index) in showRow">
-                <th scope="row">{{index+startRow+1}}</th>
+                <th>{{index+startRow+1}}</th>
                 <td v-for="key in heads">{{r[key]}}</td>
                 
                 <td v-if="option.length > 0">
-                    <button 
+                    <!--button 
                     @click="$emit('edit', r[keydata])" 
                     v-if="option.includes('edit')" 
-                    class="w3-teal w3-button">
+                    class="w3-teal w3-tag">
                         Edit
-                    </button>
+                    </button-->
+
+                    <a @click="$emit('edit', r[keydata])" 
+                    v-if="option.includes('edit')" 
+                    class="w3-tag w3-teal w3-round">
+                        Edit <i :class="icon.pencil"></i>
+                    </a>
                     
                     <button 
                     @click="$emit('delete', r[keydata])" 
@@ -209,7 +215,7 @@ Vue.component("datatable", {
             <div class="w3-bar w3-border w3-round w3-right">
                 <a href="#" 
                 @click="toThePage(currentPage-1)" 
-                :class="['w3-bar-item', 'w3-button', currentPage == 0 || currentPage == 1 ? 'w3-disabled' : '']"
+                :class="['w3-bar-item', 'w3-button', currentPage == 0 || currentPage == 1 ? 'w3-hide' : '']"
                 >
                     &laquo;
                 </a>
@@ -223,7 +229,7 @@ Vue.component("datatable", {
                 </a>
 
                 <a href="#" 
-                :class="['w3-bar-item', 'w3-button', startRow+Number(lengthRow) >= rowLenght ? 'w3-disabled' : '']"
+                :class="['w3-bar-item', 'w3-button', startRow+Number(lengthRow) >= rowLenght ? 'w3-hide' : '']"
                 @click="toThePage(currentPage == 0 ? 2 : currentPage+1)"
                 >
                     &raquo;

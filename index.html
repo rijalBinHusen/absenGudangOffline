@@ -32,13 +32,13 @@
 	v-bind:is="currentTabComponent" 
 	:datanya="deData[currentTab.toLowerCase()]" 
 	:icon="icon"
+	:bagian="deData.bagian"
+	:level="deData.level"
+	:divisi="deData.divisi"
 	@modal="modalChange($event)"
 	class="w3-center w3-display-container w3-container w3-row w3-margin"
 	>
 	<!--:field="currentTab.toLowerCase()"
-	:bagian="deData.bagian"
-	:level="deData.level"
-	:divisi="deData.divisi"
 	:karyawan="karyawanSiap"
 	@modal="modalChange()"-->
 
@@ -59,6 +59,9 @@
 		  style="height: 300px;"
 		  v-bind:is="currentForm"
 		  :datanya="datanyaForm"
+		  :bagian="deData.bagian"
+		  :level="deData.level"
+		  :divisi="deData.divisi"
 		  @tambah="tambah($event)"
 		  @update="update($event)"
 		  >
@@ -67,9 +70,6 @@
 			v-bind:is="currentForm"
 			:input="form[currentTab.toLowerCase()]"
 			:edit="akanEdit"
-			:bagian="deData.bagian"
-			:level="deData.level"
-			:divisi="deData.divisi"
 			:karyawan="deData.karyawan"
 			@tambah="tambah($event)"
 			@modal="modalChange()"
@@ -83,9 +83,12 @@
 </div>
 
 <script type="text/javascript" src="../../../FrontEnd/script/vue.js"></script>
+<script type="text/javascript" src="comp_Small.js"></script>
+<script type="text/javascript" src="DummyBackEnd.js"></script>
 <script type="text/javascript" src="comp_Divisi.js"></script>
 <script type="text/javascript" src="comp_Bagian.js"></script>
 <script type="text/javascript" src="comp_Level.js"></script>
+<script type="text/javascript" src="comp_Karyawan.js"></script>
 <script type="text/javascript" src="datatable.js"></script>
 <script type="text/javascript" src="componen.js"></script>
 <script type="text/javascript" src="script2.js"></script>

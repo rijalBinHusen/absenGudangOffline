@@ -27,7 +27,7 @@ Vue.component("tab-divisi", {
 					</ul>
 				</div>`,
 	methods: {
-
+		
 	}
 });
 
@@ -40,16 +40,20 @@ Vue.component("form-divisi", {
 		}
 	},
     template: 
-			`<div>
+			`<div class="">
+
+				<h1 class="w3-left">Masukkan nama divisi</h1>
+
 				<input type="text" 
 				:value="deData.divisi" 
+				class="w3-input w3-margin-bottom"
 				placeholder="Masukkan divisi" 
 				@change="deData.divisi = $event.target.value">
 
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				:class="['w3-button', 'w3-teal', 'w3-round-large', deData.divisi ? '' : 'w3-disabled']" 
+				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.divisi ? '' : 'w3-hide']" 
 				:value="[deData.divisi && mode == 'update' ? 'Update' : 'Tambah']" 
 				@click="$emit([deData.divisi && mode == 'update' ? 'update' : 'tambah'], deData)"
 				>

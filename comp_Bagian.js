@@ -41,15 +41,17 @@ Vue.component("form-bagian", {
 	},
     template: 
 			`<div>
+				<h1 class="w3-left">Masukkan nama bagian</h1>
+
 				<input type="text" 
+				class="w3-input w3-margin-bottom"
 				:value="deData.bagian" 
-				placeholder="Masukkan bagian" 
 				@change="deData.bagian = $event.target.value">
 
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				:class="['w3-button', 'w3-teal', 'w3-round-large', deData.bagian ? '' : 'w3-disabled']" 
+				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.bagian ? '' : 'w3-hide']" 
 				:value="[deData.bagian && mode == 'update' ? 'Update' : 'Tambah']" 
 				@click="$emit([deData.bagian && mode == 'update' ? 'update' : 'tambah'], deData)"
 				>

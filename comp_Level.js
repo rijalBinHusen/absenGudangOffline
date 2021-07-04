@@ -56,27 +56,27 @@ Vue.component("form-level", {
 	},
     template: 
 			`<div>
+				<h4 class="w3-left">Masukkan nama level </h4>
+				
 				<input type="text" 
 				:value="deData.level" 
-				placeholder="Masukkan level" 
+				class="w3-input w3-margin-bottom"
 				@change="deData.level = $event.target.value">
+
+				<h4 class="w3-left">Masukkan jam kerja (angka)</h4>
 
 				<input type="number" 
 				:value="deData.jamKerja" 
-				placeholder="Masukkan kerja" 
+				class="w3-input w3-margin-bottom"
 				@change="deData.jamKerja = $event.target.value">
 
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				:class="['w3-button', 'w3-teal', 'w3-round-large', deData.level && deData.jamKerja ? '' : 'w3-disabled']" 
+				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.level && deData.jamKerja ? '' : 'w3-hide']" 
 				:value="[deData.level && deData.jamKerja && mode == 'update' ? 'Update' : 'Tambah']" 
 				@click="$emit([deData.level && deData.jamKerja && mode == 'update' ? 'update' : 'tambah'], deData)"
 				>
-				
-				<!-- 
-				@click="console.log(deData.idLevel+deData.level)"
-				-->
 			</div>`,
 	methods: {
 		

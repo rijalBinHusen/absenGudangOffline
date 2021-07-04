@@ -10,23 +10,17 @@ new Vue({
 	  },
 	  datanyaForm: '',
 	  deData: {
-		  divisi: [ {"idDivisi": 'div1', "divisi": "Gudang depan"}, {"idDivisi": "div2", "divisi": "Gudang sentral"} ],
-          bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ],
-          level: [ {"idLevel": "lev1" ,"level": "kontrak", "jamKerja": 8} ],
-	  },
-      keyData: {
-          divisi: 'idDivisi',
-          bagian: 'idBagian',
-          level: 'idLevel'
-      }
+		  divisi: allData.divisi,
+          bagian: allData.bagian,
+          level: allData.level,
+          karyawan: allData.karyawan
+	  }
 	},
 	methods: {
 		//untuk menambah record
 		tambah (dat) {
-			//masukkan data
-				this.deData[this.currentTab.toLowerCase()].push(dat)
-			//close modal
-			this.modal = false
+            crud('create', this.currentTab.toLowerCase(), dat) //masukkan data
+            this.modal = false //close modal
 		},
 		//buka tutup modal
 		modalChange (ev) {
@@ -35,16 +29,9 @@ new Vue({
 		},
         //untuk update
 		update(dat) {
-            let index = cariIndex( 
-                                this.deData[this.currentTab.toLowerCase()], 
-                                {"equalTo": [this.keyData[this.currentTab.toLowerCase()], 
-                                 this.datanyaForm[this.keyData[this.currentTab.toLowerCase()]] 
-                                ]} 
-                                )
-			this.deData[this.currentTab.toLowerCase()].splice(index, 1)  //hapus
-			this.deData[this.currentTab.toLowerCase()].splice(index, 0, dat) //sisipkan
-			this.modalChange()
-		}
+            crud('update', this.currentTab.toLowerCase(), dat)
+            this.modalChange()
+        }
 	},
 	computed: {
 	  //Pindah pindah tab
@@ -52,38 +39,11 @@ new Vue({
 			return "tab-"+this.currentTab.toLowerCase() 
 	  },
 	  //untuk panggil form input
-	  currentForm: function () {
+	  currentForm () {
 			return "form-"+this.currentTab.toLowerCase()
 	  },
+	  getKaryawan () {
+		return dataKaryawanLengkap()
+	  }
 	}
   });
-
-function cariIndex (obj, criteria) {
-	//obj = [ {"id": 1, "item1": "item content item content"} ]
-	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
-
-	let result = ''
-	if(criteria.equalTo) {
-		for (x in obj) {
-			if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
-				result = x
-			}
-		}
-	}
-	return result
-}
-
-function cari (obj, criteria) {
-	//obj = [ {"id": 1, "item1": "item content item content"} ]
-	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
-
-	let result = []
-	if(criteria.equalTo) {
-		for (x in obj) {
-			if(obj[x][equalTo[0]] == equalTo[1]) { //jika sama
-				result.push(obj.x)
-			}
-		}
-	}
-	return result
-}

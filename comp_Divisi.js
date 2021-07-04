@@ -2,7 +2,7 @@ Vue.component("tab-divisi", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: {id: '', divisi: ''}
+			deData: {idDivisi: '', divisi: ''}
 		}
 	},
     template: `<div class="w3-center">
@@ -10,7 +10,7 @@ Vue.component("tab-divisi", {
 						<li class="w3-xlarge">
 							Daftar divisi
 							<i :class="icon.plus" 
-							@click="$emit('modal')">
+							@click="deData = ''; deData.idDivisi = 'div'+(datanya.length+1); deData.divisi = '';$emit('modal', deData)">
 							</i>
 						</li>
 
@@ -18,8 +18,8 @@ Vue.component("tab-divisi", {
 						v-for="(row, index) in datanya" 
 						class="w3-hover-light-gray"
 						>
-							{{Object.values(row)[0]}}
-							<a @click="$emit('edit', index)" 
+							{{row.divisi}}
+							<a @click="deData = datanya[index]; $emit('modal', deData)" 
 							class="w3-right w3-tag w3-teal w3-round">
 								Edit <i :class="icon.pencil"></i>
 							</a>
@@ -31,64 +31,34 @@ Vue.component("tab-divisi", {
 	}
 });
 
-// Vue.component("form-divisi", {
-// 	props: [""],
-// 	template: 
-// 		`<div>
-// 			<input type="text" 
-// 			value="divisi" 
-// 			placeholder="Masukkan divisi" 
-// 			@change="">
-
-// 			<!--Tombol untuk tambah record-->
-// 			<input 
-// 			type="submit" 
-// 			class="w3-button w3-teal w3-round-large" 
-// 			value="Tambah" 
-// 			@click="tambah">
-
-// 			<!--Tombol untuk update-->
-// 			<input 
-// 			type="submit" 
-// 			v-if=" "
-// 			class="w3-button w3-teal w3-round-large" 
-// 			value="Update" 
-// 			@click="update">
-// 		</div>`,
-// 	methods: {
-
-// 	}
-// })
-
 Vue.component("form-divisi", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: {id: '', divisi: ''}
+			mode: this.datanya.divisi ? 'update' : 'new',
+			deData: {idDivisi: this.datanya.idDivisi, divisi: this.datanya.divisi}
 		}
 	},
-    template: `<div>
+    template: 
+			`<div>
 				<input type="text" 
-				value="divisi" 
+				:value="deData.divisi" 
 				placeholder="Masukkan divisi" 
-				@change="">
-	
+				@change="deData.divisi = $event.target.value">
+
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				class="w3-button w3-teal w3-round-large" 
-				value="Tambah" 
-				@click="tambah">
-	
-				<!--Tombol untuk update-->
-				<input 
-				type="submit" 
-				v-if=" "
-				class="w3-button w3-teal w3-round-large" 
-				value="Update" 
-				@click="update">
+				:class="['w3-button', 'w3-teal', 'w3-round-large', deData.divisi ? '' : 'w3-disabled']" 
+				:value="[deData.divisi && mode == 'update' ? 'Update' : 'Tambah']" 
+				@click="$emit([deData.divisi && mode == 'update' ? 'update' : 'tambah'], deData)"
+				>
+				
+				<!-- 
+				@click="console.log(deData.idDivisi+deData.divisi)"
+				-->
 			</div>`,
 	methods: {
-
+		
 	}
 });

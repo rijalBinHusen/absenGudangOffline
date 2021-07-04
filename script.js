@@ -60,9 +60,10 @@ new Vue({
 		  plus: "fa fa-plus w3-button w3-round-large w3-teal",
 		  pencil: "fa fa-pencil w3-teal"
 	  },
+	  datanyaForm: '',
 	  deData: {
 		  divisi: [
-			  {"divisi": "Gudang depan"}, {"divisi": "Gudang sentral"}
+			  {"idDivisi": 'div1', "divisi": "Gudang depan"}, {"idDivisi": "div1", "divisi": "Gudang sentral"}
 			],
 		  bagian: [
 			  {"bagian": "Admin"}, { "bagian": "Supervisor"}
@@ -153,12 +154,9 @@ new Vue({
 	methods: {
 		//untuk menambah record
 		tambah (dat) {
-			
-			//masukkan data jika tidak kosong
-			if(dat.satu || dat.divisi && dat.level && dat.bagian || dat.nama) {
-				this.deData[this.currentTab.toLowerCase()].push( buatObjBaru(this.currentTab.toLowerCase(), dat))
-			}
-			
+			//masukkan data
+				this.deData[this.currentTab.toLowerCase()].push(dat)
+			//close modal
 			this.modal = false
 		},
 		//untuk edit, memasukkan record yang exist dan diupdate
@@ -167,9 +165,9 @@ new Vue({
 			this.deData.edit = id
 		},
 		//buka tutup modal
-		modalChange () {
+		modalChange (ev) {
 			this.modal = !this.modal
-			this.deData.edit = ""
+			this.datanyaForm = ev
 		},
 		//update record
 		update(dat) {
@@ -182,9 +180,6 @@ new Vue({
 	  //Pindah pindah tab
 	  currentTabComponent () {
 			return "tab-"+this.currentTab.toLowerCase() 
-	  },
-	  currentFormComponent () {
-			return "form-"+this.currentTab.toLowerCase() 
 	  },
 	  //siapin data yang akan diedit
 	  akanEdit: function () {
@@ -236,11 +231,7 @@ new Vue({
 	  },
 	  //untuk panggil form input
 	  currentForm: function () {
-		if(this.currentTab.toLowerCase() == "bagian" || this.currentTab.toLowerCase() == "level" || this.currentTab.toLowerCase() == "divisi" ) {
-			return "form-universal"
-		} else {
 			return "form-"+this.currentTab.toLowerCase()
-		}
 	  },
 	  //siapkkan absen untuk ditampilkan
 	  karyawanSiap: function() {

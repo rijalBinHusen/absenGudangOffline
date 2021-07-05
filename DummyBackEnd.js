@@ -30,14 +30,23 @@ const dataKaryawanLengkap = function () {
       let res = allData.karyawan[x]
       res.divisi = cariVal(allData.divisi, {"equalTo": ['idDivisi', res.divisi]}).divisi
       res.bagian =  cariVal(allData.bagian, {"equalTo": ['idBagian', res.bagian]}).bagian
-      res.level =  cariVal(allData.level, {"equalTo": ['idLevel', res.level]})
+      res.level =  cariVal(allData.level, {"equalTo": ['idLevel', res.level]}).level
       result.push(res)
     }
     return result
 }
 
 function crud (operation, field, dat) {
-  if(operation == 'create') {
+  
+  if(operation == 'read'){
+    // if(field == 'karyawan') {
+    //   return dataKaryawanLengkap()
+    // } else {
+      return allData[field]
+    // }
+  }
+  
+  else if(operation == 'create') {
     allData[field].push(dat)
   } 
       
@@ -48,6 +57,7 @@ function crud (operation, field, dat) {
                 )
     allData[field].splice(index, 1)  //hapus
     allData[field].splice(index, 0, dat) //sisipkan
+    // allData[field][index] = dat
     
     }
 }

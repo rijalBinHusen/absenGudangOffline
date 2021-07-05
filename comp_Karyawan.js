@@ -33,7 +33,8 @@ Vue.component("tab-karyawan", {
                     :option="['edit']"
                     :keydata="'idKaryawan'"
                     :icon="icon"
-                    @edit="deData = cariVal(datanya, {'equalTo': ['idKaryawan', $event]}) 
+                    @edit="deData = cariVal(datanya, {'equalTo': ['idKaryawan', $event]});
+					deData.mode = 'edit'
 					$emit('modal', deData)"
 					>
 					<!--
@@ -66,7 +67,7 @@ Vue.component("form-karyawan", {
 	props: ["datanya", "icon", "bagian", "level", "divisi"],
 	data () {
 		return {
-			mode: this.datanya.nama ? 'update' : 'new',
+			mode: this.datanya.mode == 'edit' ? 'update' : 'new',
 			deData: {
                 idKaryawan: this.datanya.idKaryawan, 
                 nama: this.datanya.nama, 
@@ -78,14 +79,15 @@ Vue.component("form-karyawan", {
 	},
     template: 
 			`<div>
-				<h4 class="w3-left">Id karyawan </h4>
+				<lable class="w3-left">Id karyawan </lable>
 				
 				<input type="text" 
 				:value="deData.idKaryawan" 
+				placeholder="Tidak boleh ada sama dengan yang lain"
 				class="w3-input w3-margin-bottom"
 				@change="deData.idKaryawan = $event.target.value">
 
-				<h4 class="w3-left">Nama karyawan</h4>
+				<lable class="w3-left">Nama karyawan</lable>
 
 				<input type="text" 
 				:value="deData.nama" 
@@ -122,9 +124,9 @@ Vue.component("form-karyawan", {
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large']" 
-				:value="[deData.idKaryawan && deData.nama && mode == 'update' ? 'Update' : 'Tambah']" 
-				@click="$emit([deData.nama && mode == 'update' ? 'update' : 'tambah'], deData)"
+				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', this.deData.idKaryawan ? '' : 'w3-hide']" 
+				:value="[mode == 'update' ? 'Update' : 'Tambah']" 
+				@click="$emit([mode == 'update' ? 'update' : 'tambah'], deData)"
 				>
                 
                 <!--

@@ -18,7 +18,7 @@
 			<button
 			v-for="tab in tabs"
 			v-bind:key="tab"
-			v-on:click="currentTab = tab"
+			v-on:click="currentTab = tab; getData"
 			v-bind:class="['w3-bar-item', 'w3-button', 'w3-hover-light-grey', 'w3-padding', currentTab == tab ? 'w3-white' : '']"
 			>
         	{{ tab }}
@@ -38,14 +38,11 @@
 	@modal="modalChange($event)"
 	class="w3-center w3-display-container w3-container w3-row w3-margin"
 	>
-	<!--:field="currentTab.toLowerCase()"
-	:karyawan="karyawanSiap"
-	@modal="modalChange()"-->
-
+		<h1>Alhamdulillah!</h1>
 	</div>
 
 	<!--Modal-->
-	<div v-if="modal" style="display: block;" class="w3-modal">
+	<div v-if="modal" style="display: block" class="w3-modal">
 		<div class="w3-modal-content">
 		  <header class="w3-container w3-teal"> 
 			<span @click="modalChange('')"

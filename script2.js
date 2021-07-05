@@ -1,7 +1,7 @@
 new Vue({
 	el: "#utama",
 	data: {
-	  currentTab: "Divisi",
+	  currentTab: "",
 	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
 	  modal: false, //buka tutup modal
 	  icon: {
@@ -10,10 +10,10 @@ new Vue({
 	  },
 	  datanyaForm: '',
 	  deData: {
-		  divisi: allData.divisi,
-          bagian: allData.bagian,
-          level: allData.level,
-          karyawan: allData.karyawan
+		  divisi:'',
+          bagian: '',
+          level: '',
+          karyawan: ''
 	  }
 	},
 	methods: {
@@ -31,7 +31,11 @@ new Vue({
 		update(dat) {
             crud('update', this.currentTab.toLowerCase(), dat)
             this.modalChange()
-        }
+			// this.getDataNew()
+        },
+		getDataNew() {
+			this.deData[this.currentTab.toLowerCase()] = crud('read', this.currentTab.toLowerCase())
+		}
 	},
 	computed: {
 	  //Pindah pindah tab
@@ -42,8 +46,18 @@ new Vue({
 	  currentForm () {
 			return "form-"+this.currentTab.toLowerCase()
 	  },
-	  getKaryawan () {
-		return dataKaryawanLengkap()
+	  getData (mode) {
+		//   if(mode == 'new') {
+		//   } 
+		  
+		//   else {
+			//   if (Object.values(this.deData).includes('')) {
+				  this.deData.divisi = crud('read', 'divisi')
+				  this.deData.bagian = crud('read', 'bagian')
+				  this.deData.level = crud('read', 'level')
+				  this.deData.karyawan = crud('read', 'karyawan')
+			//   }
+		//   }
 	  }
 	}
   });

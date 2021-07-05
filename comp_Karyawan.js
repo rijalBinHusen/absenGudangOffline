@@ -26,44 +26,41 @@ Vue.component("tab-karyawan", {
 							</i>
 						</li>
 					</ul>
-					<!--table class="w3-table w3-striped w3-border w3-margin-top">
-						<tr class="w3-teal">
-						<th>Id karyawan</th>
-						<th>nama</th>
-						<th>divisi</th>
-						<th>bagian</th>
-						<th>level</th>
-						<th>Opsi</th>
-						<tr>
-						
-						<tr class="w3-hover-light-gray" v-for="(row, index) in datanya">
-							<td>{{row.idKaryawan}}</td>
-							<td>{{row.nama}}</td>
-							<td>{{row.divisi}}</td>
-							<td>{{row.bagian}}</td>
-							<td>{{row.level}}</td>
-							<td>
-								<a @click="deData = datanya[index]; $emit('modal', deData)" 
-								class="w3-tag w3-teal w3-round">
-									Edit <i :class="icon.pencil"></i>
-								</a>
-							</td>
-						</tr>
-					</table-->
+					
                     <datatable 
                     :heads="['idKaryawan', 'nama', 'divisi', 'bagian', 'level']" 
                     :datanya="datanya"
                     :option="['edit']"
                     :keydata="'idKaryawan'"
                     :icon="icon"
-                    @edit="deData = datanya[index]; $emit('modal', deData)"
-                    >
+                    @edit="deData = cariVal(datanya, {'equalTo': ['idKaryawan', $event]}) 
+					$emit('modal', deData)"
+					>
+					<!--
+                    console.log(Object.values(deData))"
+					-->
                     </datatable>
 				</div>`,
 	methods: {
-
+		cariVal (obj, criteria) {
+			//obj = [ {"id": 1, "item1": "item content item content"} ]
+			//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+			let result = ''
+			
+			if(criteria.equalTo) {
+			  for (x in obj) {
+				if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
+				  result = obj[x]
+					break
+				}
+			  }
+			}
+			return result
+		  }
 	}
 });
+
+// -----------
 
 Vue.component("form-karyawan", {
 	props: ["datanya", "icon", "bagian", "level", "divisi"],

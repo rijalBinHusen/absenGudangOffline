@@ -1,27 +1,29 @@
 Vue.component("datatable", {
-	props: ["datanya", "heads", "option","keydata", "icon"],
+	props: ["datanya", "heads", "option","keydata", "icon", "id"],
     data () {
         return {
-            startRow: 0,
-            lengthRow: localStorage.getItem('datatableLengthRow') ? localStorage.getItem('datatableLengthRow') : 5,
-            nowSort: null,
-            currentPage: 0,
-            searchInput: [],
-            searchKey: [],
-            rowLenght: 0,
-            allPages: 0,
-            sortAsc: true
+            deData: localStorage.getItem(this.id) ? JSON.parse(localStorage.getItem(this.id)) : {
+                startRow: 0,
+                lengthRow: 5,
+                nowSort: null,
+                currentPage: 0,
+                searchInput: [],
+                searchKey: [],
+                rowLenght: 0,
+                allPages: 0,
+                sortAsc: true
+            }
         }
     },
     computed: {
         showRow () {
 
-            if(this.searchInput.length < 1) {
+            if(this.deData.searchInput.length < 1) {
             
-            this.rowLenght = this.datanya.length //total data length
-            this.allPages = Math.ceil(this.rowLenght / this.lengthRow) //total pages
+            this.deData.rowLenght = this.datanya.length //total data length
+            this.deData.allPages = Math.ceil(this.deData.rowLenght / this.deData.lengthRow) //total pages
 
-            return this.datanya.slice(this.startRow, this.startRow+Number(this.lengthRow))
+            return this.datanya.slice(this.deData.startRow, this.deData.startRow+Number(this.deData.lengthRow))
             
             } else {
                 let result = []
@@ -29,12 +31,12 @@ Vue.component("datatable", {
 
                     condition = []
 
-                    this.searchKey.map( (key, index) => {
+                    this.deData.searchKey.map( (key, index) => {
 
                         if(isNaN(val[key])) { //if the value is string not a number
-                            val[key].toLowerCase().includes(this.searchInput[index].toLowerCase()) ? condition.push(true) : condition.push(false)
+                            val[key].toLowerCase().includes(this.deData.searchInput[index].toLowerCase()) ? condition.push(true) : condition.push(false)
                         } else {
-                            val[key] == this.searchInput[index] ? condition.push(true) : condition.push(false)
+                            val[key] == this.deData.searchInput[index] ? condition.push(true) : condition.push(false)
                         }
                         
                     })
@@ -44,30 +46,31 @@ Vue.component("datatable", {
                     }
                 })
 
-                this.rowLenght = result.length //total data length
-                this.allPages = Math.ceil(this.rowLenght / this.lengthRow)  //total pages
+                this.deData.rowLenght = result.length //total data length
+                this.deData.allPages = Math.ceil(this.deData.rowLenght / this.deData.lengthRow)  //total pages
 
-                return result.slice(this.startRow, this.startRow+Number(this.lengthRow))
+                return result.slice(this.deData.startRow, this.deData.startRow+Number(this.deData.lengthRow))
             }
         },
         totalPage () {
-            if(this.allPages > 1) {
-            return this.startRow == 1 || this.startRow == 0 ? 
-            this.allPages > 2 ? [1,2,3] : [1,2] : //pages more than 2 or not
-            [this.currentPage-1, this.currentPage, this.currentPage+1 > this.allPages ? 1 : this.currentPage+1]
+            if(this.deData.allPages > 1) {
+            return this.deData.startRow == 1 || this.deData.startRow == 0 ? 
+            this.deData.allPages > 2 ? [1,2,3] : [1,2] : //pages more than 2 or not
+            [this.deData.currentPage-1, this.deData.currentPage, this.deData.currentPage+1 > this.deData.allPages ? 1 : this.deData.currentPage+1]
             }
         }
     },
     methods: {
         toThePage(num) {
-            this.startRow = (num-1)*this.lengthRow
-            this.currentPage = num
+            this.deData.startRow = (num-1)*this.deData.lengthRow
+            this.deData.currentPage = num
+            this.saveData()
         },
         changeRow (num) {
-            localStorage.setItem('datatableLengthRow', num)
-            this.lengthRow = num
-            this.startRow = 0
-            this.currentPage = 0
+            this.deData.lengthRow = num
+            this.deData.startRow = 0
+            this.deData.currentPage = 0
+            this.saveData()
         }, sortDedata (sortKey, sortAsc) {
             if (sortKey) {
                 this.datanya.sort(function (a, b) {
@@ -86,9 +89,10 @@ Vue.component("datatable", {
                     }
                     return 0
                 })
-                this.nowSort = sortKey
+                this.deData.nowSort = sortKey
                 this.searchWord ('', sortKey)
             }
+            this.saveData()
         },
         tulisanBaku (str) { //to make inClock become In Clock
             let hasil;
@@ -101,27 +105,31 @@ Vue.component("datatable", {
         },
         searchWord (val, key) {
             if (val) {
-                if (this.searchKey.includes(key)) {
-                    let position = this.searchKey.indexOf(key) //find the position of key
-                    this.searchInput.splice(position, 1) //delete him
-                    this.searchInput.splice(position, 0, val) //insert the new key word
+                if (this.deData.searchKey.includes(key)) {
+                    let position = this.deData.searchKey.indexOf(key) //find the position of key
+                    this.deData.searchInput.splice(position, 1) //delete him
+                    this.deData.searchInput.splice(position, 0, val) //insert the new key word
                 } else {
-                    this.searchInput.push(val); 
-                    this.searchKey.push(key); 
+                    this.deData.searchInput.push(val); 
+                    this.deData.searchKey.push(key); 
                 }
             } else {
-                if (this.searchKey.includes(key)) {
-                    let position = this.searchKey.indexOf(key) //find the position of key
-                    this.searchInput.splice(position, 1) //delete from searchInput
-                    this.searchKey.splice(position, 1) //delete from searchKey
+                if (this.deData.searchKey.includes(key)) {
+                    let position = this.deData.searchKey.indexOf(key) //find the position of key
+                    this.deData.searchInput.splice(position, 1) //delete from deData.searchInput
+                    this.deData.searchKey.splice(position, 1) //delete from deData.searchKey
                 } else {
-                    this.searchInput = []
-                    this.searchKey = [] 
+                    this.deData.searchInput = []
+                    this.deData.searchKey = [] 
                 }
             }
 
-            this.startRow = 0; 
-            this.currentPage = 0
+            this.deData.startRow = 0; 
+            this.deData.currentPage = 0
+            this.saveData()
+        },
+        saveData() {
+            localStorage.setItem(this.id, JSON.stringify(this.deData))
         }
     },
     template: `
@@ -131,12 +139,12 @@ Vue.component("datatable", {
             <nav class="w3-left">
             <h3>Show entries</h3>
                 <select class="w3-select" @change="changeRow($event.target.value)">
-                    <option :selected="lengthRow == 5" value="5">5</option>
-                    <option :selected="lengthRow == 10" value="10">10</option>
-                    <option :selected="lengthRow == 20" value="20">20</option>
-                    <option :selected="lengthRow == 30" value="30">30</option>
-                    <option :selected="lengthRow == 40" value="40">40</option>
-                    <option :selected="lengthRow == 50" value="50">50</option>
+                    <option :selected="deData.lengthRow == 5" value="5">5</option>
+                    <option :selected="deData.lengthRow == 10" value="10">10</option>
+                    <option :selected="deData.lengthRow == 20" value="20">20</option>
+                    <option :selected="deData.lengthRow == 30" value="30">30</option>
+                    <option :selected="deData.lengthRow == 40" value="40">40</option>
+                    <option :selected="deData.lengthRow == 50" value="50">50</option>
                 </select>
             </nav>
         </div>
@@ -148,11 +156,11 @@ Vue.component("datatable", {
             <tr class="w3-teal">
                 <th scope="col">No</th>
                 <th v-for="head in heads" 
-                @click="sortDedata(head, sortAsc); 
-                sortAsc = !sortAsc" 
+                @click="sortDedata(head, deData.sortAsc); 
+                deData.sortAsc = !deData.sortAsc" 
                 scope="col">
-                    <span style="font-size:20px; font-weight:bolder;" v-if="!sortAsc && nowSort == head">&darr;</span>
-                    <span style="font-size:20px; font-weight:bolder;" v-if="sortAsc && nowSort == head">&uarr;</span>
+                    <span style="font-size:20px; font-weight:bolder;" v-if="!deData.sortAsc && deData.nowSort == head">&darr;</span>
+                    <span style="font-size:20px; font-weight:bolder;" v-if="deData.sortAsc && deData.nowSort == head">&uarr;</span>
                     {{tulisanBaku(head)}}
                 </th>
                 <th v-if="option.length > 0" scope="col">Option</th>
@@ -171,7 +179,7 @@ Vue.component("datatable", {
             <!--end ofsearch form-->
 
             <tr class="w3-border" v-for="(r, index) in showRow">
-                <th>{{index+startRow+1}}</th>
+                <th>{{index+deData.startRow+1}}</th>
                 <td v-for="key in heads">{{r[key]}}</td>
                 
                 <td v-if="option.length > 0">
@@ -212,19 +220,19 @@ Vue.component("datatable", {
         
         <div class="w3-margin-top">
             <span class="w3-left">
-                <p>{{startRow+1}} - {{startRow+Number(lengthRow) < rowLenght ? startRow+Number(lengthRow) : rowLenght}} of {{rowLenght}} item</p>
+                <p>{{deData.startRow+1}} - {{deData.startRow+Number(deData.lengthRow) < deData.rowLenght ? deData.startRow+Number(deData.lengthRow) : deData.rowLenght}} of {{deData.rowLenght}} item</p>
             </span>
 
             <div class="w3-bar w3-border w3-round w3-right">
                 <a href="#" 
-                @click="toThePage(currentPage-1)" 
-                :class="['w3-bar-item', 'w3-button', currentPage == 0 || currentPage == 1 ? 'w3-hide' : '']"
+                @click="toThePage(deData.currentPage-1)" 
+                :class="['w3-bar-item', 'w3-button', deData.currentPage == 0 || deData.currentPage == 1 ? 'w3-hide' : '']"
                 >
                     &laquo;
                 </a>
 
                 <a href="#" 
-                :class="['w3-bar-item', 'w3-button', currentPage == p || p == 1 && currentPage == 0 ? 'w3-teal' : '' ]" 
+                :class="['w3-bar-item', 'w3-button', deData.currentPage == p || p == 1 && deData.currentPage == 0 ? 'w3-teal' : '' ]" 
                 v-for="p in totalPage"
                 @click="toThePage(p)"
                 >
@@ -232,8 +240,8 @@ Vue.component("datatable", {
                 </a>
 
                 <a href="#" 
-                :class="['w3-bar-item', 'w3-button', startRow+Number(lengthRow) >= rowLenght ? 'w3-hide' : '']"
-                @click="toThePage(currentPage == 0 ? 2 : currentPage+1)"
+                :class="['w3-bar-item', 'w3-button', deData.startRow+Number(deData.lengthRow) >= deData.rowLenght ? 'w3-hide' : '']"
+                @click="toThePage(deData.currentPage == 0 ? 2 : deData.currentPage+1)"
                 >
                     &raquo;
                 </a>

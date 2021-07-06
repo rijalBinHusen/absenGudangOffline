@@ -28,6 +28,7 @@ Vue.component("tab-karyawan", {
                     :option="['edit']"
                     :keydata="'idKar'"
                     :icon="icon"
+					:id="'table1'"
                     @edit="deData = cariVal(datanya, {'equalTo': ['idKar', $event]});
 					deData.mode = 'edit'
 					$emit('modal', deData)"
@@ -77,7 +78,6 @@ Vue.component("tab-karyawan", {
 					level:  cariVal(this.level, {"equalTo": ['idLevel', val.level]}).level
 					})
 				}
-				console.log(this.divisiSelect)
 			  })
 
 			  return  result

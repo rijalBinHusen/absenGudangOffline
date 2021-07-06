@@ -87,6 +87,7 @@ Vue.component("datatable", {
                     return 0
                 })
                 this.nowSort = sortKey
+                this.searchWord ('', sortKey)
             }
         },
         tulisanBaku (str) { //to make inClock become In Clock

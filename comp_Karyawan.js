@@ -2,13 +2,7 @@ Vue.component("tab-karyawan", {
 	props: ["datanya", "icon", "divisi", "bagian", "level"],
 	data () {
 		return {
-			deData: {
-				idKaryawan: '',
-				nama: '',
-				bagian: '',
-                level: '',
-                divisi: ''
-			}
+			deData: ''
 		}
 	},
     template: `<div class="w3-center">
@@ -16,13 +10,7 @@ Vue.component("tab-karyawan", {
 						<li class="w3-xlarge">
 							Daftar karyawan
 							<i :class="icon.plus" 
-							@click="deData = ''; 
-									deData.idKaryawan = ''; 
-									deData.nama = ''; 
-									deData.bagian = '';
-									deData.level = '';
-									deData.divisi = '';
-									$emit('modal', deData)">
+							@click="newData">
 							</i>
 						</li>
 					</ul>
@@ -31,9 +19,9 @@ Vue.component("tab-karyawan", {
                     :heads="['idKaryawan', 'nama', 'divisi', 'bagian', 'level']" 
                     :datanya="dataKaryawanLengkap"
                     :option="['edit']"
-                    :keydata="'idKaryawan'"
+                    :keydata="'idKar'"
                     :icon="icon"
-                    @edit="deData = cariVal(datanya, {'equalTo': ['idKaryawan', $event]});
+                    @edit="deData = cariVal(datanya, {'equalTo': ['idKar', $event]});
 					deData.mode = 'edit'
 					$emit('modal', deData)"
 					>
@@ -42,12 +30,27 @@ Vue.component("tab-karyawan", {
 					-->
                     </datatable>
 				</div>`,
+	methods: {
+		newData() {
+			this.deData = {
+				idKar: 'kar'+(this.datanya.length+1),
+				idKaryawan: '',
+				nama: '',
+				bagian: '',
+				level: '',
+				divisi: ''
+			}
+			this.$emit('modal', this.deData)
+		}
+			
+	},
 	computed: {
 		dataKaryawanLengkap  () {
 			let result = []
 			  this.datanya.map( val => {
 				  
 				  result.push({
+					  idKar: val.idKar,
 					  idKaryawan: val.idKaryawan,
 					  nama: val.nama,
 					  divisi: cariVal(this.divisi, {"equalTo": ['idDivisi', val.divisi]}).divisi,
@@ -70,6 +73,7 @@ Vue.component("form-karyawan", {
 		return {
 			mode: this.datanya.mode == 'edit' ? 'update' : 'new',
 			deData: {
+				idKar: this.datanya.idKar,
                 idKaryawan: this.datanya.idKaryawan, 
                 nama: this.datanya.nama, 
                 divisi: this.datanya.divisi,
@@ -84,7 +88,6 @@ Vue.component("form-karyawan", {
 				
 				<input type="text" 
 				:value="deData.idKaryawan" 
-				:disabled="mode == 'update'"
 				placeholder="Tidak boleh ada sama dengan yang lain"
 				:class="['w3-input w3-margin-bottom']"
 				@change="deData.idKaryawan = $event.target.value">

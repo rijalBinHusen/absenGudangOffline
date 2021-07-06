@@ -67,6 +67,7 @@ Vue.component("form-level", {
 				<input type="number" 
 				:value="deData.jamKerja" 
 				class="w3-input w3-margin-bottom"
+				maxlength="2"
 				@change="deData.jamKerja = $event.target.value">
 
 				<!--Tombol untuk tambah record-->

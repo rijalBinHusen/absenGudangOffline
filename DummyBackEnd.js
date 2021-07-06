@@ -7,12 +7,12 @@ const allData =
   bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ],
   level: [ {"idLevel": "lev1" ,"level": "kontrak", "jamKerja": 8} ],
   karyawan: [ 
-    {"idKaryawan": 12039, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"} ,
-    {"idKaryawan": 12040, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
-    {"idKaryawan": 12041, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
-    {"idKaryawan": 12042, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
-    {"idKaryawan": 12043, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
-    {"idKaryawan": 12044, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"}
+    {"idKar": "kar1", "idKaryawan": 12039, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"} ,
+    {"idKar": "kar2", "idKaryawan": 12040, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
+    {"idKar": "kar3", "idKaryawan": 12041, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
+    {"idKar": "kar4", "idKaryawan": 12042, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
+    {"idKar": "kar5", "idKaryawan": 12043, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
+    {"idKar": "kar6", "idKaryawan": 12044, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"}
   ],
   }
 
@@ -20,7 +20,7 @@ const allData =
     'divisi': 'idDivisi',
     'bagian': 'idBagian',
     'level': 'idLevel',
-    'karyawan': 'idKaryawan'
+    'karyawan': 'idKar'
   }
 
   //siapkkan data karyawan

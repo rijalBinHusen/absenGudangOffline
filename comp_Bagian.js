@@ -2,7 +2,7 @@ Vue.component("tab-bagian", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: {idBagian: '', bagian: ''}
+			deData: ''
 		}
 	},
     template: `<div class="w3-center">
@@ -10,7 +10,7 @@ Vue.component("tab-bagian", {
 						<li class="w3-xlarge">
 							Daftar bagian
 							<i :class="icon.plus" 
-							@click="deData = ''; deData.idBagian = 'bag'+(datanya.length+1); deData.bagian = '';$emit('modal', deData)">
+							@click="newData">
 							</i>
 						</li>
 
@@ -27,7 +27,13 @@ Vue.component("tab-bagian", {
 					</ul>
 				</div>`,
 	methods: {
-
+		newData() {
+			this.deData = {
+				idBagian: 'bag'+(this.datanya.length+1),
+				bagian: ''
+			} 
+			this.$emit('modal', this.deData)
+		}
 	}
 });
 

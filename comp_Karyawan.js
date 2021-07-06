@@ -1,5 +1,5 @@
 Vue.component("tab-karyawan", {
-	props: ["datanya", "icon"],
+	props: ["datanya", "icon", "divisi", "bagian", "level"],
 	data () {
 		return {
 			deData: {
@@ -29,7 +29,7 @@ Vue.component("tab-karyawan", {
 					
                     <datatable 
                     :heads="['idKaryawan', 'nama', 'divisi', 'bagian', 'level']" 
-                    :datanya="datanya"
+                    :datanya="dataKaryawanLengkap"
                     :option="['edit']"
                     :keydata="'idKaryawan'"
                     :icon="icon"
@@ -42,21 +42,22 @@ Vue.component("tab-karyawan", {
 					-->
                     </datatable>
 				</div>`,
-	methods: {
-		cariVal (obj, criteria) {
-			//obj = [ {"id": 1, "item1": "item content item content"} ]
-			//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
-			let result = ''
-			
-			if(criteria.equalTo) {
-			  for (x in obj) {
-				if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
-				  result = obj[x]
-					break
-				}
-			  }
-			}
-			return result
+	computed: {
+		dataKaryawanLengkap  () {
+			let result = []
+			  this.datanya.map( val => {
+				  
+				  result.push({
+					  idKaryawan: val.idKaryawan,
+					  nama: val.nama,
+					  divisi: cariVal(this.divisi, {"equalTo": ['idDivisi', val.divisi]}).divisi,
+					  bagian:  cariVal(this.bagian, {"equalTo": ['idBagian', val.bagian]}).bagian,
+					  level:  cariVal(this.level, {"equalTo": ['idLevel', val.level]}).level
+				  })
+
+			  })
+
+			  return  result
 		  }
 	}
 });
@@ -83,8 +84,9 @@ Vue.component("form-karyawan", {
 				
 				<input type="text" 
 				:value="deData.idKaryawan" 
+				:disabled="mode == 'update'"
 				placeholder="Tidak boleh ada sama dengan yang lain"
-				class="w3-input w3-margin-bottom"
+				:class="['w3-input w3-margin-bottom']"
 				@change="deData.idKaryawan = $event.target.value">
 
 				<lable class="w3-left">Nama karyawan</lable>

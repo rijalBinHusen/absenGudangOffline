@@ -10,7 +10,7 @@ Vue.component("tab-divisi", {
 						<li class="w3-xlarge">
 							Daftar divisi
 							<i :class="icon.plus" 
-							@click="deData = ''; deData.idDivisi = 'div'+(datanya.length+1); deData.divisi = '';$emit('modal', deData)">
+							@click="newData">
 							</i>
 						</li>
 
@@ -27,7 +27,13 @@ Vue.component("tab-divisi", {
 					</ul>
 				</div>`,
 	methods: {
-		
+		newData () {
+			this.deData = {
+				idDivisi: 'div'+(this.datanya.length+1),
+				divisi: ''
+			}
+			this.$emit('modal', this.deData)
+		}
 	}
 });
 

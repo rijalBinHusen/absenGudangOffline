@@ -2,11 +2,7 @@ Vue.component("tab-level", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: {
-				idLevel: '',
-				level: '',
-				jamKerja: ''
-			}
+			deData: ''
 		}
 	},
     template: `<div class="w3-center">
@@ -14,11 +10,7 @@ Vue.component("tab-level", {
 						<li class="w3-xlarge">
 							Daftar level
 							<i :class="icon.plus" 
-							@click="deData = ''; 
-									deData.idLevel = 'lev'+(datanya.length+1); 
-									deData.level = ''; 
-									deData.jamKerja = '';
-									$emit('modal', deData)">
+							@click="newData">
 							</i>
 						</li>
 					</ul>
@@ -42,7 +34,14 @@ Vue.component("tab-level", {
 					</table>
 				</div>`,
 	methods: {
-
+		newData() {
+			this.deData = { 
+				idLevel: 'lev'+(this.datanya.length+1),
+				level: '',
+				jamKerja: ''
+			}
+			this.$emit('modal', this.deData)
+		}
 	}
 });
 
@@ -77,6 +76,7 @@ Vue.component("form-level", {
 				:value="[deData.level && deData.jamKerja && mode == 'update' ? 'Update' : 'Tambah']" 
 				@click="$emit([deData.level && deData.jamKerja && mode == 'update' ? 'update' : 'tambah'], deData)"
 				>
+				
 			</div>`,
 	methods: {
 		

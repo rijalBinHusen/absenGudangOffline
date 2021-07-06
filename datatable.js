@@ -3,7 +3,7 @@ Vue.component("datatable", {
     data () {
         return {
             startRow: 0,
-            lengthRow: 5,
+            lengthRow: localStorage.getItem('datatableLengthRow') ? localStorage.getItem('datatableLengthRow') : 5,
             nowSort: null,
             currentPage: 0,
             searchInput: [],
@@ -64,6 +64,7 @@ Vue.component("datatable", {
             this.currentPage = num
         },
         changeRow (num) {
+            localStorage.setItem('datatableLengthRow', num)
             this.lengthRow = num
             this.startRow = 0
             this.currentPage = 0
@@ -129,12 +130,12 @@ Vue.component("datatable", {
             <nav class="w3-left">
             <h3>Show entries</h3>
                 <select class="w3-select" @change="changeRow($event.target.value)">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
+                    <option :selected="lengthRow == 5" value="5">5</option>
+                    <option :selected="lengthRow == 10" value="10">10</option>
+                    <option :selected="lengthRow == 20" value="20">20</option>
+                    <option :selected="lengthRow == 30" value="30">30</option>
+                    <option :selected="lengthRow == 40" value="40">40</option>
+                    <option :selected="lengthRow == 50" value="50">50</option>
                 </select>
             </nav>
             

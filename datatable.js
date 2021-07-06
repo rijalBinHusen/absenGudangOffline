@@ -139,9 +139,6 @@ Vue.component("datatable", {
                     <option :selected="lengthRow == 50" value="50">50</option>
                 </select>
             </nav>
-            
-            <nav class="col">
-            </nav>
         </div>
     <!-- End of pagination length -->
 

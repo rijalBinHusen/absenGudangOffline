@@ -2,13 +2,20 @@ Vue.component("tab-karyawan", {
 	props: ["datanya", "icon", "divisi", "bagian", "level"],
 	data () {
 		return {
-			deData: ''
+			deData: '',
+			divisiSelect: ''
 		}
 	},
     template: `<div class="w3-center">
 					<ul class="w3-ul">
 						<li class="w3-xlarge">
 							Daftar karyawan
+							<select class="w3-large" @change="divisiSelect = $event.target.value">
+								<option value="">Pilih Divisi</option>
+								<option v-for="div in divisi" :value="div.idDivisi">
+									{{div.divisi}}
+								</option>
+							</select>
 							<i :class="icon.plus" 
 							@click="newData">
 							</i>
@@ -16,7 +23,7 @@ Vue.component("tab-karyawan", {
 					</ul>
 					
                     <datatable 
-                    :heads="['idKaryawan', 'nama', 'divisi', 'bagian', 'level']" 
+                    :heads="['idKaryawan', 'nama', 'bagian', 'level']" 
                     :datanya="dataKaryawanLengkap"
                     :option="['edit']"
                     :keydata="'idKar'"
@@ -47,17 +54,30 @@ Vue.component("tab-karyawan", {
 	computed: {
 		dataKaryawanLengkap  () {
 			let result = []
-			  this.datanya.map( val => {
-				  
-				  result.push({
-					  idKar: val.idKar,
-					  idKaryawan: val.idKaryawan,
-					  nama: val.nama,
-					  divisi: cariVal(this.divisi, {"equalTo": ['idDivisi', val.divisi]}).divisi,
-					  bagian:  cariVal(this.bagian, {"equalTo": ['idBagian', val.bagian]}).bagian,
-					  level:  cariVal(this.level, {"equalTo": ['idLevel', val.level]}).level
-				  })
+			  this.datanya.filter( val => {
+				
+				let res = true
 
+				if(this.divisiSelect) {
+					if(this.divisiSelect == val.divisi) {
+						res = true
+					} else {
+						res = false
+					}
+				} else (
+					res = true
+				)
+
+				if(res == true) {
+				result.push({
+					idKar: val.idKar,
+					idKaryawan: val.idKaryawan,
+					nama: val.nama,
+					bagian:  cariVal(this.bagian, {"equalTo": ['idBagian', val.bagian]}).bagian,
+					level:  cariVal(this.level, {"equalTo": ['idLevel', val.level]}).level
+					})
+				}
+				console.log(this.divisiSelect)
 			  })
 
 			  return  result

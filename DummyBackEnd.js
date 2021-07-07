@@ -5,7 +5,7 @@ const allData =
 { 
   divisi: [ {"idDivisi": 'div1', "divisi": "Gudang depan"}, {"idDivisi": "div2", "divisi": "Gudang sentral"} ],
   bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ],
-  level: [ {"idLevel": "lev1" ,"level": "kontrak", "jamKerja": 8} ],
+  level: [ {"idLevel": "lev1" ,"level": "kontrak", "jamKerja": 7} ],
   karyawan: [ 
     {"idKar": "kar1", "idKaryawan": 12039, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"} ,
     {"idKar": "kar2", "idKaryawan": 12040, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
@@ -14,36 +14,60 @@ const allData =
     {"idKar": "kar5", "idKaryawan": 12043, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"},
     {"idKar": "kar6", "idKaryawan": 12044, "nama": "Rijal Bin Husen", "divisi": "div1", "bagian": "bag2", "level": "lev1"}
   ],
-  }
+  absen: [
+      {"idAbsen": "abs1",
+      "tanggal": "2021-3-2" ,
+      "karyawan": "12039", 
+      "masuk": "06:23", 
+      "istirahat":1, 
+      "pulang":"15:23", 
+      "keterangan": "Masuk"
+    }
+  ]  }
 
   const keyData = {
     'divisi': 'idDivisi',
     'bagian': 'idBagian',
     'level': 'idLevel',
-    'karyawan': 'idKar'
+    'karyawan': 'idKar',
+    'absen': 'idAbsen'
   }
 
   //siapkkan data karyawan
-const dataKaryawanLengkap = function () {
+const dataAbsen = function () {
   let result = []
-    for (x in allData.karyawan) {
-      let res = allData.karyawan[x]
-      res.divisi = cariVal(allData.divisi, {"equalTo": ['idDivisi', res.divisi]}).divisi
-      res.bagian =  cariVal(allData.bagian, {"equalTo": ['idBagian', res.bagian]}).bagian
-      res.level =  cariVal(allData.level, {"equalTo": ['idLevel', res.level]}).level
-      result.push(res)
-    }
+    allData.absen.map((val, index) => {
+      
+      let karyawan = cariVal(allData.karyawan, {"equalTo": ['idKaryawan', val.karyawan]})
+      let jamKerja = cariVal(allData.level, {"equalTo": ["idLevel", karyawan.level] }).jamKerja
+      let total = jamTotal(val.masuk, val.pulang, val.istirahat)
+            
+        result.push({
+          idAbsen: val.idAbsen,
+          tanggal: val.tanggal,
+          idKaryawan: val.karyawan,
+          nama: karyawan.nama,
+          divisi: cariVal(allData.divisi, {"equalTo": ["idDivisi", karyawan.divisi]}).divisi,
+          bagian: cariVal(allData.bagian, {"equalTo": ["idBagian", karyawan.bagian]}).bagian,
+          masuk: val.masuk,
+          istirahat: val.istirahat,
+          pulang: val.pulang,
+          jamKerja: jamKerja,
+          keterangan: val.keterangan,
+          total: total, 
+          selisih: total-jamKerja
+        })
+    })
     return result
 }
 
 function crud (operation, field, dat) {
   
   if(operation == 'read'){
-    // if(field == 'karyawan') {
-    //   return dataKaryawanLengkap()
-    // } else {
+    if(field == 'absen') {
+      return dataAbsen()
+    }
       return allData[field]
-    // }
   }
   
   else if(operation == 'create') {
@@ -92,4 +116,16 @@ function cariIndex (obj, criteria) {
     }
   }
   return result
+}
+
+function jamTotal(masuk, pulang, istirahat) {
+  let Amasuk = masuk.split(":")[0]
+  let Apulang= pulang.split(":")[0]
+
+  if(Amasuk > Apulang) {
+    return Number(Apulang)+24 - (Number(Amasuk)+1) - istirahat
+  }
+
+  return Number(Apulang) - (Number(Amasuk)+1) - istirahat
+
 }

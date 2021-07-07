@@ -196,12 +196,12 @@ Vue.component("datatable", {
                         Edit <i :class="icon.pencil"></i>
                     </a>
                     
-                    <button 
+                    <a 
                     @click="$emit('delete', r[keydata])" 
                     v-if="option.includes('delete')" 
-                    class="w3-button w3-pink">
+                    class="w3-tag w3-pink">
                         Delete
-                    </button>
+                    </a>
 
                     <button 
                     @click="$emit('detail', r[keydata])" 

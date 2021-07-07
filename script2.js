@@ -46,18 +46,12 @@ new Vue({
 	  currentForm () {
 			return "form-"+this.currentTab.toLowerCase()
 	  },
-	  getData (mode) {
-		//   if(mode == 'new') {
-		//   } 
-		  
-		//   else {
-			//   if (Object.values(this.deData).includes('')) {
-				  this.deData.divisi = crud('read', 'divisi')
-				  this.deData.bagian = crud('read', 'bagian')
-				  this.deData.level = crud('read', 'level')
-				  this.deData.karyawan = crud('read', 'karyawan')
-			//   }
-		//   }
+	  getData () {
+		this.deData.divisi = crud('read', 'divisi')
+		this.deData.bagian = crud('read', 'bagian')
+		this.deData.level = crud('read', 'level')
+		this.deData.karyawan = crud('read', 'karyawan')
+		this.deData.absen = crud('read', 'absen')
 	  }
 	}
   });

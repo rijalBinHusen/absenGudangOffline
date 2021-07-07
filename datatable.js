@@ -173,6 +173,7 @@ Vue.component("datatable", {
                     <input type="text" 
                     style="max-width:80px;" 
                     placeholder="Search" 
+                    :value="[deData.searchKey.includes(key) ? deData.searchInput[deData.searchKey.indexOf(key)] : '']"
                     @change="searchWord($event.target.value, key)">
                 </td>
             </tr>
@@ -199,8 +200,8 @@ Vue.component("datatable", {
                     <a 
                     @click="$emit('delete', r[keydata])" 
                     v-if="option.includes('delete')" 
-                    class="w3-tag w3-pink">
-                        Delete
+                    class="w3-tag w3-pink w3-round">
+                        Delete <i class="fa fa-trash-o"></i>
                     </a>
 
                     <button 

@@ -13,7 +13,8 @@ new Vue({
 		  divisi:'',
           bagian: '',
           level: '',
-          karyawan: ''
+          karyawan: '',
+		  absen: ''
 	  }
 	},
 	methods: {

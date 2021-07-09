@@ -4,14 +4,20 @@ Vue.component("tab-absen", {
 		return {
 			deData: '',
 			header: ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
-			headShow: localStorage.getItem('headShow') ? localStorage.getItem('headShow').split(",") : ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ]
+			headShow: localStorage.getItem('headShow') ? localStorage.getItem('headShow').split(",") : ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
+			date: []
 		}
 	},
     template: `<div class="w3-center">
-					<input class="w3-large" type="date">
-					<input class="w3-large" type="date">
-
-					<span class="w3-large w3-dropdown-hover">
+					<div class="">
+					
+					<input @change="changeDate(0, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
+					<input @change="changeDate(1, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
+					<input @click="showData" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
+							<i :class="[icon.plus, 'w3-xlarge']" 
+							@click="newData">
+							</i>
+							<span class="w3-large w3-dropdown-hover">
 
 							<button class="w3-button w3-teal w3-round">Tampilkan column</button>
 							<div 
@@ -26,18 +32,7 @@ Vue.component("tab-absen", {
 								</label>
 							</div>
 						</span>
-
-					<ul class="w3-ul">
-						<li class="w3-xlarge">
-							Daftar absen
-							
-							
-							<i :class="icon.plus" 
-							@click="newData">
-							</i>
-						
-						</li>
-					</ul>
+					</div>
 
 					<datatable 
                     :heads="headShow" 
@@ -75,6 +70,14 @@ Vue.component("tab-absen", {
 				})
 				this.headShow = newValue
 			}
+			localStorage.setItem('headShow', this.headShow)
+		},
+		changeDate(input, val) {
+			!new Date(val).getTime()? this.date[input] = '' : this.date[input] = val
+			console.log(this.date)
+		},
+		showData() {
+			this.$emit('absen', this.date)
 		}
 	},
 	computed: {

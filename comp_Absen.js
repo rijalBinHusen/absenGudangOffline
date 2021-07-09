@@ -3,18 +3,15 @@ Vue.component("tab-absen", {
 	data () {
 		return {
 			deData: '',
-			header: ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
-			headShow: localStorage.getItem('headShow') ? localStorage.getItem('headShow').split(",") : ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ]
+			header: ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
+			headShow: localStorage.getItem('headShow') ? localStorage.getItem('headShow').split(",") : ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ]
 		}
 	},
     template: `<div class="w3-center">
-					<ul class="w3-ul">
-						<li class="w3-xlarge">
-							Daftar absen
-							<i :class="icon.plus" 
-							@click="newData">
-							</i>
-							<span v-if="" class="w3-medium w3- w3-dropdown-hover">
+					<input class="w3-large" type="date">
+					<input class="w3-large" type="date">
+
+					<span class="w3-large w3-dropdown-hover">
 
 							<button class="w3-button w3-teal w3-round">Tampilkan column</button>
 							<div 
@@ -22,14 +19,23 @@ Vue.component("tab-absen", {
 							>	
 								<label
 								class="w3-bar-item w3-button w3-hover-pale-blue"
-								v-for="head in header"
-								:value="head"
-								@click="changeData(head)"
+								v-for="head in header""
+								
 								>
-									<input  @click="changeData(head)" :checked="headShow.includes(head)" type="checkbox" :value="head"> {{head}} 
+									<input @click="changeData(head)" :checked="headShow.includes(head)" type="checkbox" :value="head"> {{head}} 
 								</label>
 							</div>
 						</span>
+
+					<ul class="w3-ul">
+						<li class="w3-xlarge">
+							Daftar absen
+							
+							
+							<i :class="icon.plus" 
+							@click="newData">
+							</i>
+						
 						</li>
 					</ul>
 
@@ -60,10 +66,15 @@ Vue.component("tab-absen", {
 		  this.$emit('modal', this.deData)
 		},
 		changeData(val) {
-			let index = this.header.indexOf(val)
-			this.headShow.includes(val) ? this.headShow.splice(index, 1) : this.headShow.splice(index, 0, val)
-			localStorage.setItem('headShow', this.headShow)
-			console.log(this.headShow)
+			if(this.headShow.includes(val)) {
+				this.headShow.splice(this.headShow.indexOf(val), 1)
+			} else {
+				let newValue = []
+				this.header.map(nowVal => {
+					this.headShow.includes(nowVal) || nowVal == val ? newValue.push(nowVal) : false 
+				})
+				this.headShow = newValue
+			}
 		}
 	},
 	computed: {
@@ -72,7 +83,7 @@ Vue.component("tab-absen", {
 			  this.datanya.map(val => {
 				
 				let karyawan = cariVal(this.karyawan, {"equalTo": ['idKaryawan', val.karyawan]})
-				let jamKerja = cariVal(this.level, {"equalTo": ["idLevel", karyawan.level] }).jamKerja
+				let level = cariVal(this.level, {"equalTo": ["idLevel", karyawan.level] })
 				let total = jamTotal(val.masuk, val.pulang, val.istirahat)
 					  
 				  result.push({
@@ -82,13 +93,14 @@ Vue.component("tab-absen", {
 					nama: karyawan.nama,
 					divisi: cariVal(this.divisi, {"equalTo": ["idDivisi", karyawan.divisi]}).divisi,
 					bagian: cariVal(this.bagian, {"equalTo": ["idBagian", karyawan.bagian]}).bagian,
+					level: level.level,
 					masuk: val.masuk,
 					istirahat: val.istirahat,
 					pulang: val.pulang,
-					jamKerja: jamKerja,
+					jamKerja: level.jamKerja,
 					keterangan: val.keterangan,
 					total: total, 
-					selisih: total-jamKerja
+					selisih: total-level.jamKerja
 				  })
 			  })
 			  return result

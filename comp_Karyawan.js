@@ -12,7 +12,7 @@ Vue.component("tab-karyawan", {
 							Daftar karyawan
 							<select class="w3-large" @change="divisiSelect = $event.target.value">
 								<option value="">Pilih Divisi</option>
-								<option v-for="div in divisi" :value="div.idDivisi">
+								<option v-for="div in divisi" :value="div.id_divisi">
 									{{div.divisi}}
 								</option>
 							</select>
@@ -41,7 +41,6 @@ Vue.component("tab-karyawan", {
 	methods: {
 		newData() {
 			this.deData = {
-				idKar: 'kar'+(this.datanya.length+1),
 				idKaryawan: '',
 				nama: '',
 				bagian: '',
@@ -71,11 +70,11 @@ Vue.component("tab-karyawan", {
 
 				if(res == true) {
 				result.push({
-					idKar: val.idKar,
+					id_karyawan: val.id_karyawan,
 					idKaryawan: val.idKaryawan,
 					nama: val.nama,
-					bagian:  cariVal(this.bagian, {"equalTo": ['idBagian', val.bagian]}).bagian,
-					level:  cariVal(this.level, {"equalTo": ['idLevel', val.level]}).level
+					bagian:  cariVal(this.bagian, {"equalTo": ['id_bagian', val.bagian]}).bagian,
+					level:  cariVal(this.level, {"equalTo": ['id_level', val.level]}).level
 					})
 				}
 			  })
@@ -93,7 +92,6 @@ Vue.component("form-karyawan", {
 		return {
 			mode: this.datanya.mode == 'edit' ? 'update' : 'new',
 			deData: {
-				idKar: this.datanya.idKar,
                 idKaryawan: this.datanya.idKaryawan, 
                 nama: this.datanya.nama, 
                 divisi: this.datanya.divisi,
@@ -121,7 +119,7 @@ Vue.component("form-karyawan", {
 
                 <pilih
                 :datanya="divisi"
-                :keyData="'idDivisi'"
+                :keyData="'id_divisi'"
                 :valData="'divisi'"
                 :pilih="deData.divisi"
                 @ganti="deData.divisi = $event"
@@ -130,7 +128,7 @@ Vue.component("form-karyawan", {
 
                 <pilih
                 :datanya="bagian"
-                :keyData="'idBagian'"
+                :keyData="'id_bagian'"
                 :valData="'bagian'"
                 :pilih="deData.bagian"
                 @ganti="deData.bagian = $event"
@@ -139,7 +137,7 @@ Vue.component("form-karyawan", {
 
                 <pilih
                 :datanya="level"
-                :keyData="'idLevel'"
+                :keyData="'id_level'"
                 :valData="'level'"
                 :pilih="deData.level"
                 @ganti="deData.level = $event"
@@ -151,13 +149,17 @@ Vue.component("form-karyawan", {
 				type="submit" 
 				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', this.deData.idKaryawan ? '' : 'w3-hide']" 
 				:value="[mode == 'update' ? 'Update' : 'Tambah']" 
-				@click="$emit([mode == 'update' ? 'update' : 'tambah'], deData)"
+				@click="send"
 				>
                 
                 <!--
                 -->
 			</div>`,
 	methods: {
-		
+		send() {
+			this.mode == 'update' ?
+			this.$emit('update', {store:'karyawan', id: {id_karyawan: this.datanya.id_karyawan}, val: this.deData }) :
+			this.$emit('tambah', this.deData)
+		}
 	}
 });

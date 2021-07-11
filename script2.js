@@ -118,6 +118,14 @@ new Vue({
 					this.deData.level = val
 				}
 			})
+		},
+		getKaryawan() {
+			//initiatate level data 
+			db.collection('karyawan').get().then(val => {
+				if(val.length > 0) {
+					this.deData.karyawan = val
+				}
+			})
 		}
 	},
 	computed: {
@@ -135,6 +143,7 @@ new Vue({
 		this.getMasterCounter()
 		this.getBagian()
 		this.getLevel()
+		this.getKaryawan()
 	}
   });
 
@@ -148,6 +157,25 @@ function cariIndex (obj, criteria) {
 		obj.filter((val, index) => {
 			val[criteria.equalTo[0]] == criteria.equalTo[1] ? result = index : ''
 		})
+	}
+	return result
+  }
+
+
+function cariVal (obj, criteria) {
+	//obj = [ {"id": 1, "item1": "item content item content"} ]
+	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+	let result = ''
+	
+	if(criteria.equalTo) {
+		obj.filter((val, index) => {
+			val[criteria.equalTo[0]] == criteria.equalTo[1] ? result = obj[index] : ''
+	 	})
+	//   for (x in obj) {
+	// 	if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
+	// 	  result = obj[x]
+	// 	}
+	//   }
 	}
 	return result
   }

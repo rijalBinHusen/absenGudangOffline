@@ -102,6 +102,14 @@ new Vue({
 					this.deData.divisi = val
 				}
 			})
+		},
+		getBagian() {
+			//initiatate bagian data 
+			db.collection('bagian').get().then(val => {
+				if(val.length > 0) {
+					this.deData.bagian = val
+				}
+			})
 		}
 	},
 	computed: {

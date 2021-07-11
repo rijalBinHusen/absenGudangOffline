@@ -1,11 +1,11 @@
 <html>
 <head>
 <title>Bismillah</title>
-<link rel="stylesheet" href="../../../FrontEnd/script/w3.css">
+<link rel="stylesheet" href="w3.css">
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="fontawesome.min.css">
 </head>
  
 <body>
@@ -18,7 +18,7 @@
 			<button
 			v-for="tab in tabs"
 			v-bind:key="tab"
-			v-on:click="currentTab = tab; getData"
+			v-on:click="currentTab = tab"
 			v-bind:class="['w3-bar-item', 'w3-button', 'w3-hover-light-grey', 'w3-padding', currentTab == tab ? 'w3-white' : '']"
 			>
         	{{ tab }}
@@ -81,9 +81,10 @@
 
 </div>
 
-<script type="text/javascript" src="../../../FrontEnd/script/vue.js"></script>
+<script type="text/javascript" src="vue.js"></script>
+<script type="text/javascript" src="localbase.dev.js"></script>
 <script type="text/javascript" src="comp_Small.js"></script>
-<script type="text/javascript" src="DummyBackEnd.js"></script>
+<!-- <script type="text/javascript" src="DummyBackEnd.js"></script> -->
 <script type="text/javascript" src="comp_Divisi.js"></script>
 <script type="text/javascript" src="comp_Bagian.js"></script>
 <script type="text/javascript" src="comp_Level.js"></script>

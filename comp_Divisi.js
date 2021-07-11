@@ -2,7 +2,7 @@ Vue.component("tab-divisi", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: {idDivisi: '', divisi: ''}
+			deData: {}
 		}
 	},
     template: `<div class="w3-center">
@@ -29,7 +29,6 @@ Vue.component("tab-divisi", {
 	methods: {
 		newData () {
 			this.deData = {
-				idDivisi: 'div'+(this.datanya.length+1),
 				divisi: ''
 			}
 			this.$emit('modal', this.deData)
@@ -42,7 +41,7 @@ Vue.component("form-divisi", {
 	data () {
 		return {
 			mode: this.datanya.divisi ? 'update' : 'new',
-			deData: {idDivisi: this.datanya.idDivisi, divisi: this.datanya.divisi}
+			deData: this.datanya.divisi
 		}
 	},
     template: 
@@ -51,17 +50,17 @@ Vue.component("form-divisi", {
 				<h1 class="w3-left">Masukkan nama divisi</h1>
 
 				<input type="text" 
-				:value="deData.divisi" 
+				:value="deData" 
 				class="w3-input w3-margin-bottom"
 				placeholder="Masukkan divisi" 
-				@change="deData.divisi = $event.target.value">
+				@change="deData= $event.target.value">
 
 				<!--Tombol untuk tambah record-->
 				<input 
 				type="submit" 
-				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.divisi ? '' : 'w3-hide']" 
-				:value="[deData.divisi && mode == 'update' ? 'Update' : 'Tambah']" 
-				@click="$emit([deData.divisi && mode == 'update' ? 'update' : 'tambah'], deData)"
+				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData ? '' : 'w3-hide']" 
+				:value="[deData && mode == 'update' ? 'Update' : 'Tambah']" 
+				@click="send"
 				>
 				
 				<!-- 
@@ -69,6 +68,10 @@ Vue.component("form-divisi", {
 				-->
 			</div>`,
 	methods: {
-		
+		send() {
+			this.mode == 'update' ?
+			this.$emit('update', {store:'divisi', id: {id_divisi: this.datanya.id_divisi}, val:{divisi: this.deData} }) :
+			this.$emit('tambah', {divisi: this.deData})
+		}
 	}
 });

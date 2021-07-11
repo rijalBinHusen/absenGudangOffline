@@ -2,7 +2,7 @@ Vue.component("tab-level", {
 	props: ["datanya", "icon"],
 	data () {
 		return {
-			deData: ''
+			deData: {}
 		}
 	},
     template: `<div class="w3-center">
@@ -36,7 +36,6 @@ Vue.component("tab-level", {
 	methods: {
 		newData() {
 			this.deData = { 
-				idLevel: 'lev'+(this.datanya.length+1),
 				level: '',
 				jamKerja: ''
 			}
@@ -50,7 +49,7 @@ Vue.component("form-level", {
 	data () {
 		return {
 			mode: this.datanya.level ? 'update' : 'new',
-			deData: {idLevel: this.datanya.idLevel, level: this.datanya.level, jamKerja: this.datanya.jamKerja}
+			deData: {level: this.datanya.level, jamKerja: this.datanya.jamKerja}
 		}
 	},
     template: 
@@ -74,12 +73,16 @@ Vue.component("form-level", {
 				<input 
 				type="submit" 
 				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.level && deData.jamKerja ? '' : 'w3-hide']" 
-				:value="[deData.level && deData.jamKerja && mode == 'update' ? 'Update' : 'Tambah']" 
-				@click="$emit([deData.level && deData.jamKerja && mode == 'update' ? 'update' : 'tambah'], deData)"
+				:value="[mode == 'update' ? 'Update' : 'Tambah']" 
+				@click="send"
 				>
 				
 			</div>`,
 	methods: {
-		
+		send() {
+			this.mode == 'update' ?
+			this.$emit('update', {store:'level', id: {id_level: this.datanya.id_level}, val: this.deData }) :
+			this.$emit('tambah', this.deData)
+		}
 	}
 });

@@ -110,6 +110,14 @@ new Vue({
 					this.deData.bagian = val
 				}
 			})
+		},
+		getLevel() {
+			//initiatate level data 
+			db.collection('level').get().then(val => {
+				if(val.length > 0) {
+					this.deData.level = val
+				}
+			})
 		}
 	},
 	computed: {
@@ -125,6 +133,8 @@ new Vue({
 	created () {
 		this.getDivisi()
 		this.getMasterCounter()
+		this.getBagian()
+		this.getLevel()
 	}
   });
 

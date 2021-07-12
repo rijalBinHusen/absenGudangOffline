@@ -26,10 +26,10 @@ Vue.component("tab-karyawan", {
                     :heads="['idKaryawan', 'nama', 'bagian', 'level']" 
                     :datanya="dataKaryawanLengkap"
                     :option="['edit']"
-                    :keydata="'idKar'"
+                    :keydata="'id_karyawan'"
                     :icon="icon"
 					:id="'table1'"
-                    @edit="deData = cariVal(datanya, {'equalTo': ['idKar', $event]});
+                    @edit="deData = cariVal(datanya, {'equalTo': ['id_karyawan', $event]});
 					deData.mode = 'edit'
 					$emit('modal', deData)"
 					>
@@ -48,6 +48,8 @@ Vue.component("tab-karyawan", {
 				divisi: ''
 			}
 			this.$emit('modal', this.deData)
+
+			console.log(this.datanya)
 		}
 			
 	},
@@ -78,7 +80,7 @@ Vue.component("tab-karyawan", {
 					})
 				}
 			  })
-
+			  console.log(result)
 			  return  result
 		  }
 	}

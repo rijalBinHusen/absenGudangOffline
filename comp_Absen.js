@@ -5,7 +5,7 @@ Vue.component("tab-absen", {
 			deData: '',
 			header: ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
 			headShow: localStorage.getItem('headShow') ? localStorage.getItem('headShow').split(",") : ['tanggal', 'idKaryawan', 'nama', 'divisi', 'bagian', 'level', 'masuk', 'istirahat', 'pulang', 'total', 'jamKerja', 'selisih', 'keterangan' ],
-			date: []
+			date: ['2021-5-2']
 		}
 	},
     template: `<div class="w3-center">
@@ -13,7 +13,7 @@ Vue.component("tab-absen", {
 					
 					<input @change="changeDate(0, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
 					<input @change="changeDate(1, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
-					<input @click="showData" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
+					<input @click="$emit('getdata', date[0])" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
 							<i :class="[icon.plus, 'w3-xlarge']" 
 							@click="newData">
 							</i>
@@ -85,8 +85,8 @@ Vue.component("tab-absen", {
 			let result = []
 			  this.datanya.map(val => {
 				
-				let karyawan = cariVal(this.karyawan, {"equalTo": ['idKaryawan', val.karyawan]})
-				let level = cariVal(this.level, {"equalTo": ["idLevel", karyawan.level] })
+				let karyawan = cariVal(this.karyawan, {"equalTo": ['id_karyawan', val.karyawan]})
+				let level = cariVal(this.level, {"equalTo": ["id_level", karyawan.level] })
 				let total = jamTotal(val.masuk, val.pulang, val.istirahat)
 					  
 				  result.push({
@@ -94,8 +94,8 @@ Vue.component("tab-absen", {
 					tanggal: val.tanggal,
 					idKaryawan: val.karyawan,
 					nama: karyawan.nama,
-					divisi: cariVal(this.divisi, {"equalTo": ["idDivisi", karyawan.divisi]}).divisi,
-					bagian: cariVal(this.bagian, {"equalTo": ["idBagian", karyawan.bagian]}).bagian,
+					divisi: cariVal(this.divisi, {"equalTo": ["id_divisi", karyawan.divisi]}).divisi,
+					bagian: cariVal(this.bagian, {"equalTo": ["id_bagian", karyawan.bagian]}).bagian,
 					level: level.level,
 					masuk: val.masuk,
 					istirahat: val.istirahat,

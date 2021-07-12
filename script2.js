@@ -4,7 +4,7 @@ let db = new Localbase('db')
 new Vue({
 	el: "#utama",
 	data: {
-	  currentTab: "",
+	  currentTab: "Absen",
 	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
 	  modal: false, //buka tutup modal
 	  icon: {
@@ -126,6 +126,23 @@ new Vue({
 					this.deData.karyawan = val
 				}
 			})
+		},
+		getAbsen(date){
+			db.collection('absen').orderBy('tanggal').get().then( (absen) => {
+				absen.map( (val, index) => {
+					if(val.tanggal == date) {
+						this.deData.absen.push(val)
+					}
+				})
+			})
+			// db.collection('absen').doc({tanggal: '2021-5-2'}).get().then(val => {
+			// // 	// if(val.tanggal == date) {
+			// // 	// 	this.deData.absen.push(val)
+			// // 	// 	console.log(true)
+			// // 	// } else {
+			// 		console.log(val)
+			// 	// }
+			// })
 		}
 	},
 	computed: {
@@ -171,11 +188,6 @@ function cariVal (obj, criteria) {
 		obj.filter((val, index) => {
 			val[criteria.equalTo[0]] == criteria.equalTo[1] ? result = obj[index] : ''
 	 	})
-	//   for (x in obj) {
-	// 	if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
-	// 	  result = obj[x]
-	// 	}
-	//   }
 	}
 	return result
   }

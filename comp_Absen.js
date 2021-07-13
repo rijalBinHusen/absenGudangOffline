@@ -14,7 +14,7 @@ Vue.component("tab-absen", {
 					<input @change="changeDate(0, $event.target.value)" class="w3-button w3-border w3-large" type="date">
 					Sampai tanggal :
 					<input @change="changeDate(1, $event.target.value)" class="w3-button w3-border w3-large" type="date">
-					<input @click="$emit('getdata', date[0])" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
+					<input @click="$emit('getdata', date)" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
 							<i :class="[icon.plus, 'w3-xlarge']" 
 							@click="newData">
 							</i>
@@ -140,7 +140,7 @@ Vue.component("form-absen", {
 						:value="deData.tanggal"
 						placeholder="Masukkan Tanggal"
 						class="w3-input w3-margin-bottom w3-border"
-						@change="deData.tanggal = $event.target.value.toString()"
+						@change="changeDate($event.target.value)"
 						>
 					</div>
 					
@@ -157,12 +157,12 @@ Vue.component("form-absen", {
 						<i class="w3-xxlarge fa fa-clock-o"></i>
 					</div>
 					<div class="w3-rest">
-						<input type="text" 
+						<input type="time" 
+						maxlength="5"
 						:value="deData.masuk"
 						placeholder="Masukkan jam masuk"
 						class="w3-input w3-margin-bottom w3-margin-top w3-border"
-						maxlength="6"
-						@change="deData.masuk = $event.target.value"
+						@change="clock('masuk', $event.target.value)"
 						>
 					</div>
 
@@ -171,10 +171,10 @@ Vue.component("form-absen", {
 					</div>
 					<div class="w3-rest">
 						<input type="number" 
+						maxlength="1"
 						:value="deData.istirahat" 
 						placeholder="Istirahat"
 						class="w3-input w3-margin-bottom w3-margin-top w3-border"
-						maxlength="1"
 						@change="deData.istirahat = $event.target.value"
 						>
 					</div>
@@ -183,10 +183,10 @@ Vue.component("form-absen", {
 						<i class="w3-xxlarge fa fa-clock-o"></i>
 					</div>
 					<div class="w3-rest">
-						<input type="text" 
+						<input type="time" 
+						maxlength="5"
 						:value="deData.pulang" 
-						maxlength="6"
-						@change="deData.pulang = $event.target.value"
+						@change="clock('pulang', $event.target.value)"
 						placeholder="Pulang"
 						class="w3-input w3-margin-bottom w3-margin-top w3-border"
 						>
@@ -220,6 +220,12 @@ Vue.component("form-absen", {
 			this.$emit('update', {store:'absen', id: {id_absen: this.datanya.id_absen}, val: this.deData }) :
 			// console.log({store:'absen', id: {id_absen: this.datanya.id_absen}, val: this.deData }) :
 			this.$emit('tambah', this.deData)
+		},
+		changeDate(str) {
+			check('date', str) ? this.deData.tanggal = str : this.deData.tanggal = 'mm/dd/yyyy'
+		},
+		clock(input, str) {
+			check('clock', str) ? this.deData[input] = str : this.deData[input] = ''
 		}
 	}
 });

@@ -70,9 +70,9 @@ new Vue({
 			//replace old data with the new one
 			db.collection(store).doc(id).set(val)
 		},
-		async getMasterCounter() {
+		getMasterCounter() {
 			//initiate master counter identity
-			await db.collection('data_absen').get().then( val => {
+			db.collection('data_absen').get().then( val => {
 				if(val.length < 1) {
 					db.collection('data_absen').add({
 						absen: 'lastId', value: {
@@ -129,14 +129,28 @@ new Vue({
 			})
 		},
 		getAbsen(date){
+			if(date.length == 2) {
+
+			let dates = getDaysArray(new Date(date[0]), new Date(date[1]))
+
 			this.deData.absen = []
 			db.collection('absen').orderBy('tanggal').get().then( (absen) => {
-				absen.map( (val, index) => {
-					if(val.tanggal == date) {
-						this.deData.absen.push(val)
-					}
+				absen.map( (val) => {
+
+					dates.map(dateVal => {
+						if(val.tanggal == dateVal) {
+							this.deData.absen.push(val)
+						}
+					})
+
 				})
 			})
+
+
+
+			} else {
+				alert("Set all date form")
+			}
 			// db.collection('absen').doc({tanggal: '2021-5-2'}).get().then(val => {
 			// // 	// if(val.tanggal == date) {
 			// // 	// 	this.deData.absen.push(val)
@@ -194,7 +208,7 @@ function cariVal (obj, criteria) {
 	return result
   }
 
-  function jamTotal(masuk, pulang, istirahat) {
+function jamTotal(masuk, pulang, istirahat) {
   let Amasuk = masuk.split(":")[0]
   let Apulang= pulang.split(":")[0]
 
@@ -203,5 +217,28 @@ function cariVal (obj, criteria) {
   }
 
   return Number(Apulang) - (Number(Amasuk)+1) - istirahat
+
+}
+
+function getDaysArray (start, end) {
+	var arr=[]
+    for(dt=new Date(start); dt<= end; dt.setDate(dt.getDate()+1)){
+        arr.push(new Date(dt));
+    }
+    return arr.map((val)=>  val.toISOString().slice(0,10))
+};
+
+function check (criteria, str) {
+	
+		let hasil; //true or false
+		
+		if (criteria == 'date') {
+		  hasil = /^\d{4}[-](0?[1-9]|1[012])[-]([12][0-9]|3[01]|0?[1-9])/g.test(str)
+		} else if (criteria == 'number') {
+		  hasil = !isNaN(str)
+		} else if(criteria == 'clock') {
+		  str[2] == ':' && str.slice(0,2) <= 23 && str.slice(3,5) <= 59 ? hasil = true : hasil = false
+		}
+		return hasil
 
 }

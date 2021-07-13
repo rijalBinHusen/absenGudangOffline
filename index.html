@@ -65,17 +65,6 @@
 		  @tambah="tambah($event)"
 		  @update="update($event)"
 		  >
-		  <!--Panggil form component-->
-		  <!--form-content 
-			v-bind:is="currentForm"
-			:input="form[currentTab.toLowerCase()]"
-			:edit="akanEdit"
-			:karyawan="deData.karyawan"
-			@tambah="tambah($event)"
-			@modal="modalChange()"
-			@update="update($event)"
-			  >
-			  </form-content-->
 		  </div>
 		</div>
 	</div>
@@ -94,6 +83,8 @@
 <script type="text/javascript" src="datatable.js"></script>
 <script type="text/javascript" src="componen.js"></script>
 <script type="text/javascript" src="script2.js"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+
 <script>
 	// window.addEventListener('resize', function(event) {
     // console.log(window.innerWidth)

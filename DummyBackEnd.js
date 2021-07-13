@@ -7,8 +7,6 @@ const allData =
   bagian: [ {"idBagian": 'bag1', "bagian": "Supervisor"}, {"idBagian": "bag2", "bagian": "Administration"} ],
   level: [ {"id_evel": "1" ,"level": "kontrak", "jamKerja": 7} ],
   karyawan: [ 
-    {"id_karyawan": "1", "idKaryawan": 12039, "nama": "SUDIONO", "divisi": "1", "bagian": "2", "level": "1"} ,
-    {"id_karyawan": "2", "idKaryawan": 12040, "nama": "CAHYO HARDIANTO", "divisi": "2", "bagian": "2", "level": "1"},
     {"id_karyawan": "3", "idKaryawan": 12041, "nama": "KHOIRUL", "divisi": "1", "bagian": "2", "level": "1"},
     {"id_karyawan": "4", "idKaryawan": 12042, "nama": "ARIMBI AYUNINGTYAS", "divisi": "2", "bagian": "2", "level": "1"},
     {"id_karyawan": "5", "idKaryawan": 12043, "nama": "M HUDA", "divisi": "1", "bagian": "2", "level": "1"},
@@ -49,71 +47,71 @@ const allData =
     'absen': 'idAbsen'
   }
 
-function crud (operation, field, dat) {
+// function crud (operation, field, dat) {
   
-  if(operation == 'read'){
-      return allData[field]
-  }
+//   if(operation == 'read'){
+//       return allData[field]
+//   }
   
-  else if(operation == 'create') {
-    allData[field].push(dat)
-  } 
+//   else if(operation == 'create') {
+//     allData[field].push(dat)
+//   } 
       
-  else if (operation == 'update') {
-    let index = cariIndex( 
-                allData[field], 
-                {"equalTo": [keyData[field], dat[keyData[field]] ]} 
-                )
-    allData[field].splice(index, 1)  //hapus
-    allData[field].splice(index, 0, dat) //sisipkan
-    // allData[field][index] = dat
+//   else if (operation == 'update') {
+//     let index = cariIndex( 
+//                 allData[field], 
+//                 {"equalTo": [keyData[field], dat[keyData[field]] ]} 
+//                 )
+//     allData[field].splice(index, 1)  //hapus
+//     allData[field].splice(index, 0, dat) //sisipkan
+//     // allData[field][index] = dat
     
-    }
-}
+//     }
+// }
 
-function cariVal (obj, criteria) {
-  //obj = [ {"id": 1, "item1": "item content item content"} ]
-  //cireteria = { "equalTo": ["ObjectKey", "key to find"] }
-  let result = ''
+// function cariVal (obj, criteria) {
+//   //obj = [ {"id": 1, "item1": "item content item content"} ]
+//   //cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+//   let result = ''
   
-  if(criteria.equalTo) {
-    for (x in obj) {
-      if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
-        result = obj[x]
-      }
-    }
-  }
-  return result
-}
+//   if(criteria.equalTo) {
+//     for (x in obj) {
+//       if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
+//         result = obj[x]
+//       }
+//     }
+//   }
+//   return result
+// }
 
 
 
-function cariIndex (obj, criteria) {
-  //obj = [ {"id": 1, "item1": "item content item content"} ]
-  //cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+// function cariIndex (obj, criteria) {
+//   //obj = [ {"id": 1, "item1": "item content item content"} ]
+//   //cireteria = { "equalTo": ["ObjectKey", "key to find"] }
 
-  let result = ''
-  if(criteria.equalTo) {
-    for (x in obj) {
-      if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
-        result = x
-      }
-    }
-  }
-  return result
-}
+//   let result = ''
+//   if(criteria.equalTo) {
+//     for (x in obj) {
+//       if(obj[x][criteria.equalTo[0]] == criteria.equalTo[1]) { //jika sama
+//         result = x
+//       }
+//     }
+//   }
+//   return result
+// }
 
-function jamTotal(masuk, pulang, istirahat) {
-  let Amasuk = masuk.split(":")[0]
-  let Apulang= pulang.split(":")[0]
+// function jamTotal(masuk, pulang, istirahat) {
+//   let Amasuk = masuk.split(":")[0]
+//   let Apulang= pulang.split(":")[0]
 
-  if(Amasuk > Apulang) {
-    return Number(Apulang)+24 - (Number(Amasuk)+1) - istirahat
-  }
+//   if(Amasuk > Apulang) {
+//     return Number(Apulang)+24 - (Number(Amasuk)+1) - istirahat
+//   }
 
-  return Number(Apulang) - (Number(Amasuk)+1) - istirahat
+//   return Number(Apulang) - (Number(Amasuk)+1) - istirahat
 
-}
+// }
 
 
 function generator (length) {
@@ -154,6 +152,6 @@ function generatorClock () {
 }
 
 function generatorTgl () {
-  let clock = ['2021-3-2', '2021-4-2', '2021-5-2', '2021-6-2', '2021-7-2', '2021-8-2', '2021-9-2', '2021-10-2', '2021-11-2', '2021-12-2', '2021-1-22', '2021-4-23', ]
+  let clock = ['2021-03-02', '2021-04-02', '2021-05-02', '2021-06-02', '2021-07-02', '2021-08-02', '2021-09-02', '2021-10-02', '2021-11-02', '2021-12-02', '2021-01-22', '2021-04-23', ]
   return clock[Math.round(Math.random() * (clock.length-1) ) ]
 }

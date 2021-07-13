@@ -10,9 +10,10 @@ Vue.component("tab-absen", {
 	},
     template: `<div class="w3-center">
 					<div class="">
-					
-					<input @change="changeDate(0, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
-					<input @change="changeDate(1, $event.target.value)" class="w3-button w3-teal w3-large" type="date">
+					Dari tanggal :
+					<input @change="changeDate(0, $event.target.value)" class="w3-button w3-border w3-large" type="date">
+					Sampai tanggal :
+					<input @change="changeDate(1, $event.target.value)" class="w3-button w3-border w3-large" type="date">
 					<input @click="$emit('getdata', date[0])" class="w3-large w3-teal w3-button w3-round" type="submit" value="show">
 							<i :class="[icon.plus, 'w3-xlarge']" 
 							@click="newData">
@@ -38,19 +39,19 @@ Vue.component("tab-absen", {
                     :heads="headShow" 
                     :datanya="dataAbsen"
                     :option="['edit', 'delete']"
-                    :keydata="'idAbsen'"
+                    :keydata="'id_absen'"
                     :icon="icon"
 					:id="'table2'"
-                    @edit="deData = cariVal(datanya, {'equalTo': ['idAbsen', $event]});
+                    @edit="deData = cariVal(datanya, {'equalTo': ['id_absen', $event]});
 					deData.mode = 'edit';
-					$emit('modal', deData)"
+					$emit('modal', deData);
+					"
 					>
 
 				</div>`,
 	methods: {
 		newData() {
 			this.deData = {
-			idAbsen: new Date().getTime(),
 			tanggal: "" ,
 			karyawan: "", 
 			masuk: "", 
@@ -74,7 +75,6 @@ Vue.component("tab-absen", {
 		},
 		changeDate(input, val) {
 			!new Date(val).getTime()? this.date[input] = '' : this.date[input] = val
-			console.log(this.date)
 		},
 		showData() {
 			this.$emit('absen', this.date)
@@ -85,12 +85,12 @@ Vue.component("tab-absen", {
 			let result = []
 			  this.datanya.map(val => {
 				
-				let karyawan = cariVal(this.karyawan, {"equalTo": ['id_karyawan', val.karyawan]})
+				let karyawan = cariVal(this.karyawan, {"equalTo": ['idKaryawan', val.karyawan]})
 				let level = cariVal(this.level, {"equalTo": ["id_level", karyawan.level] })
 				let total = jamTotal(val.masuk, val.pulang, val.istirahat)
 					  
 				  result.push({
-					idAbsen: val.idAbsen,
+					id_absen: val.id_absen,
 					tanggal: val.tanggal,
 					idKaryawan: val.karyawan,
 					nama: karyawan.nama,
@@ -118,7 +118,7 @@ Vue.component("form-absen", {
 		return {
 			mode: this.datanya.mode == 'edit' ? 'update' : 'new',
 			deData: {
-				idAbsen: this.datanya.idAbsen,
+				id_absen: this.datanya.id_absen,
 				tanggal: this.datanya.tanggal ,
 				karyawan: this.datanya.karyawan, 
 				masuk: this.datanya.masuk, 
@@ -136,11 +136,11 @@ Vue.component("form-absen", {
 						<i class="w3-xxlarge fa fa-calendar"></i>
 					</div>
 					<div class="w3-rest">
-						<input type="text" 
+						<input type="date" 
 						:value="deData.tanggal"
 						placeholder="Masukkan Tanggal"
 						class="w3-input w3-margin-bottom w3-border"
-						@change="deData.tanggal = $event.target.value"
+						@change="deData.tanggal = $event.target.value.toString()"
 						>
 					</div>
 					
@@ -210,11 +210,16 @@ Vue.component("form-absen", {
 				type="submit" 
 				:class="['w3-button w3-left w3-margin-top w3-teal w3-round-large', deData.karyawan  ? '' : 'w3-hide']" 
 				:value="[mode == 'update' ? 'Update' : 'Tambah']" 
-				@click="$emit([mode == 'update' ? 'update' : 'tambah'], deData)"
+				@click="send"
 				>			
 				
 			</div>`,
 	methods: {
-		
+		send() {
+			this.mode == 'update' ?
+			this.$emit('update', {store:'absen', id: {id_absen: this.datanya.id_absen}, val: this.deData }) :
+			// console.log({store:'absen', id: {id_absen: this.datanya.id_absen}, val: this.deData }) :
+			this.$emit('tambah', this.deData)
+		}
 	}
 });

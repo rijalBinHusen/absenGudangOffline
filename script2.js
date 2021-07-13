@@ -1,5 +1,6 @@
 //initiate for for local dataabse
 let db = new Localbase('db')
+// db.config.debug = false
 
 new Vue({
 	el: "#utama",
@@ -128,6 +129,7 @@ new Vue({
 			})
 		},
 		getAbsen(date){
+			this.deData.absen = []
 			db.collection('absen').orderBy('tanggal').get().then( (absen) => {
 				absen.map( (val, index) => {
 					if(val.tanggal == date) {
@@ -191,3 +193,15 @@ function cariVal (obj, criteria) {
 	}
 	return result
   }
+
+  function jamTotal(masuk, pulang, istirahat) {
+  let Amasuk = masuk.split(":")[0]
+  let Apulang= pulang.split(":")[0]
+
+  if(Amasuk > Apulang) {
+    return Number(Apulang)+24 - (Number(Amasuk)+1) - istirahat
+  }
+
+  return Number(Apulang) - (Number(Amasuk)+1) - istirahat
+
+}

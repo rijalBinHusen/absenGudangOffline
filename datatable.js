@@ -18,6 +18,10 @@ Vue.component("datatable", {
     computed: {
         showRow () {
 
+            if(this.deData.currentPage > this.deData.allPages) {
+                this.toThePage(1)
+            }
+
             if(this.deData.searchInput.length < 1) {
             
             this.deData.rowLenght = this.datanya.length //total data length
@@ -184,14 +188,7 @@ Vue.component("datatable", {
                 <td v-for="key in heads">{{r[key]}}</td>
                 
                 <td v-if="option.length > 0">
-                    <!--button 
-                    @click="$emit('edit', r[keydata])" 
-                    v-if="option.includes('edit')" 
-                    class="w3-teal w3-tag">
-                        Edit
-                    </button-->
-
-                    <a @click="$emit('edit', r[keydata])" 
+                    <a @click="$emit('edit', r[keydata]); deData.nowSort = null" 
                     v-if="option.includes('edit')" 
                     class="w3-tag w3-teal w3-round">
                         Edit <i :class="icon.pencil"></i>

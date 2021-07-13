@@ -48,8 +48,6 @@ Vue.component("tab-karyawan", {
 				divisi: ''
 			}
 			this.$emit('modal', this.deData)
-
-			console.log(this.datanya)
 		}
 			
 	},

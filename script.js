@@ -1,163 +1,241 @@
-let daftar = {
-	divisi : [],
-	bagian : [],
-	level : [],
-	karyawan : [],
-	absen : [],
-	tableOrigin : {
-		absen : [  "tanggal", "id", "nama", "divisi", "bagian", "masuk", "istirahat", "keluar", "total", "normal", "selisih", "keterangan", "action" ],
-		level : ['level', 'jam'],
-		karyawan : ['id', 'nama', 'divisi', 'level', 'bagian' ]
-	}
+function buatObjBaru (tab, obj) {
+	if(tab == "divisi" || tab == "bagian") {
+		return {[tab]: obj.satu}
+	} else if (tab == "level") {
+		return {"level": obj.satu, "jamKerja": obj.dua}
+	} else if (tab == "karyawan" || tab == "absen") {
+		return obj
+	} 
 }
- 
-if (localStorage.getItem('divisi')) { daftar.divisi = JSON.parse(localStorage.getItem('divisi')) }
-if (localStorage.getItem('bagian')) { daftar.bagian = JSON.parse(localStorage.getItem('bagian')) }
-if (localStorage.getItem('level')) { daftar.level = JSON.parse(localStorage.getItem('level')) }
-if (localStorage.getItem('karyawan')) { daftar.karyawan = JSON.parse(localStorage.getItem('karyawan')) }
-if (localStorage.getItem('absen')) { daftar.absen = JSON.parse(localStorage.getItem('absen')) }
- 
-class baru {
-	constructor (table) {
-		this.daftar = daftar[table]
-		this[table] = []
-		this.id = null
-		this.baru = true
-		this.tableOrgin = daftar.tableOrigin[table]
-		this.tableTampil = []
+
+function ObjKaryawanAbsen(obj) {
+	let kosong = {}
+	for (i=0; i < obj.length; i++) {
+		kosong[obj[i].id] = obj[i]
 	}
+	return kosong
+	
 }
- 
-var app = new Vue({
-	el : '#utama',
-	data : {
-		menu : {  },
-		divisi : new baru('divisi'),
-		bagian : new baru('bagian'),
-		level : new baru('level'),
-		karyawan : new baru('karyawan'),
-		absen : new baru('absen'),
-		gtanggal : '',
-		model : {
-			1 : null,
-			2 : null,
-			3 : null,
-			4 : null,
-			5 : null,
-			6 : null,
-			7 : null,
-			8 : null,
-			9 : null
+
+function cekJam (jam) {
+	return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(jam) //return true or false
+}
+
+function cekDate(date) {
+	return Boolean(new Date(date).getTime())
+}
+
+function cari (obj, criteria) {
+	//obj = [ {"id": 1, "item1": "item content item content"} ]
+	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+
+	let result = []
+	if(criteria.equalTo) {
+		for (x in obj) {
+			if(obj[x][equalTo[0]] == equalTo[1]) { //jika sama
+				result.push(obj.x)
+			}
+		}
+	}
+	return result
+}
+
+function tulisanBaku (str) {
+	let hasil;
+
+	let res = str.replace(/([A-Z])/g,' $1');//sisipkan sapasi sebelum huruf besar ditenghah
+	hasil = res[0].toUpperCase()
+	hasil += res.slice(1)
+
+	return hasil
+}
+
+new Vue({
+	el: "#utama",
+	data: {
+	  currentTab: "Divisi",
+	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
+	  modal: false, //buka tutup modal
+	  icon: {
+		  plus: "fa fa-plus w3-button w3-round-large w3-teal",
+		  pencil: "fa fa-pencil w3-teal"
+	  },
+	  datanyaForm: '',
+	  deData: {
+		  divisi: [
+			  {"idDivisi": 'div1', "divisi": "Gudang depan"}, {"idDivisi": "div1", "divisi": "Gudang sentral"}
+			],
+		  bagian: [
+			  {"bagian": "Admin"}, { "bagian": "Supervisor"}
+			],
+		  level: [
+			  {"level": "kontrak", "jamKerja": 8}
+		  ],
+		  karyawan: [
+			  {"id": 12039, "nama": "Rijal Bin Husen", "divisi": 0, "bagian": 0, "level":0}
+		  ],
+		  absen: [
+			  {
+			  "tanggal": "2021-12-19", 
+			  "masuk": "22:23", 
+			  "istirahat": 1, 
+			  "keluar": "07:53", 
+			  "idKaryawan": 12039, 
+			   "total": 8, 
+			   "keterangan": "tes",
+			   "nama": "Rijal bin Husen",
+			   "divisi": 0,
+			   "bagian": 0
+			},
+			{
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  },
+			  {
+				"tanggal": "2021-12-19", 
+				"masuk": "22:23", 
+				"istirahat": 1, 
+				"keluar": "07:53", 
+				"idKaryawan": 12039, 
+				 "total": 8, 
+				 "keterangan": "tes",
+				 "nama": "Rijal bin Husen",
+				 "divisi": 0,
+				 "bagian": 0
+			  }
+		  ],
+		  edit: ""
+	  }
+	},
+	methods: {
+		//untuk menambah record
+		tambah (dat) {
+			//masukkan data
+				this.deData[this.currentTab.toLowerCase()].push(dat)
+			//close modal
+			this.modal = false
 		},
-		css : {
-			navbar : 'w3-bar-item w3-button w3-hover-light-grey w3-padding',
-			table : 'w3-table w3-striped',
-			button : 'w3-aqua w3-padding-small w3-round w3-border w3-margin-right',
-			input : 'w3-light-gray w3-padding-small w3-round w3-border'
+		//untuk edit, memasukkan record yang exist dan diupdate
+		edit (id) {
+			this.modal = true
+			this.deData.edit = id
 		},
-		tableOrigin : {
-			absen : [  "tanggal", "id", "nama", "divisi", "bagian", "masuk", "istirahat", "keluar", "total", "normal", "selisih", "keterangan", "action" ],
-			inputlevel : ['level', 'jam'],
-			karyawan : ['id', 'nama', 'divisi', 'level', 'bagian' ],
-			inputdivisi : [],
-			inputbagian : [],
-			none : [],
-			tampilkan : []
+		//buka tutup modal
+		modalChange (ev) {
+			this.modal = !this.modal
+			this.datanyaForm = ev
 		},
-		tableTampil : {
-			absen : null
+		//update record
+		update(dat) {
+			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 1)  //hapus
+			this.deData[this.currentTab.toLowerCase()].splice(this.deData.edit, 0, buatObjBaru(this.currentTab.toLowerCase(), dat)) //sisipkan
+			this.modalChange()
 		}
 	},
-	methods : {
-		showMenu (el) {
-			 this.menu = { [el] : true }
-			 this.tableTampil[el] ? '' : this.tableTampil[el] = this.tableOrigin[el]
-			 this.resetModel(el)
-		},
-		tambah (tab, jml) {
-			let datanya = [this.model[1], this.model[2], this.model[3], this.model[4], this.model[5], this.model[6], this.model[7], this.model[8], this.model[9] ]
-			let condition = 0;
- 
-			for (let i = 1; i <= jml; i ++) {
-				this.model[i] !== null ? condition += 0 : condition +=1
+	computed: {
+	  //Pindah pindah tab
+	  currentTabComponent () {
+			return "tab-"+this.currentTab.toLowerCase() 
+	  },
+	  //siapin data yang akan diedit
+	  akanEdit: function () {
+	  if(this.currentTab.toLowerCase() == "bagian" || this.currentTab.toLowerCase() == "level" || this.currentTab.toLowerCase() == "divisi" )
+		  { 
+			if (this.deData.edit !== "") {
+				return { 
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
+					"data": Object.values(this.deData[this.currentTab.toLowerCase()][this.deData.edit])
+				}
+			} else {
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),	
+					"data": ["", "", "", ""]
+				}
 			}
- 
-			if(!condition) {
-				datanya.length = jml
-				this[tab].daftar.push(datanya)
-				this.resetModel(tab)
-				this.simpan(tab)
+		} else {
+			if(this.deData.edit !== "") {
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][this.deData.edit]),
+					"data": this.deData[this.currentTab.toLowerCase()][this.deData.edit]
+					
+				}
+			} else {
+				//data karyawan
+				return {
+					"holder": Object.keys(this.deData[this.currentTab.toLowerCase()][0]),
+					"data": {
+						"id": "", 
+						"nama": "", 
+						"bagian": "kosong", 
+						"level": "kosong", 
+						"divisi": "kosong", 
+						"jamKerja": "",
+						"tanggal": "", 
+			  			"masuk": "", 
+			  			"istirahat": "", 
+			  			"keluar": "", 
+			  			"idKaryawan": "", 
+			   			"total": "", 
+			   			"keterangan": "",
+			   			"nama": "",
+			   			"normal": "",
+			   			"selisih":""
+					}
+				}
 			}
-		},
-		edit (tab, v) {
-			this[tab].id = v
-			this[tab].baru = false
-			this.model[1] = this[tab].daftar[v][0]
-		},
-		update (tab, val) {
-			this[tab].daftar[this[tab].id][0] = this.model[val]
-			this.resetModel(tab)
-			this.simpan(tab)
-		},
-		update2 (tab, key) {
-			this[tab].id == key ? this[tab].id = null : this[tab].id = key
-		},
-		simpan (tab) {
-			localStorage.setItem(tab, JSON.stringify(this[tab].daftar));
-			this[tab].id = null
-		},
-		isNumber: function(evt) {
-		  evt = (evt) ? evt : window.event;
-		  var charCode = (evt.which) ? evt.which : evt.keyCode;
-		  if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-			evt.preventDefault();;
-		  } else {
-			return true;
-		  }
-		},
-		resetModel (tab) {
-			for (let i = 1; i <= 10; i++) {
-				this.model[i] = null
-			}
-			this[tab].baru = true
-		},
-		findObj(key, obj, val) {
-			return obj[key][val]
-		},
-		cekDate (mod) {
-			if (!new Date(this.model[mod]).getTime()) {
-			this.model[mod] = null
-			alert("Masukkan tanggal yang benar dengan format YYYY-MM-DD (2021-03-13)");		
-			}
-		},
-		cekClock (w) {
-			let cek = this.model[w].includes(":") ? this.model[w].split(":") : ""
-			let tes = cek.length == 2 && cek[0].length == 2 && cek[1].length == 2 && cek[0] >= 0 && cek[0] < 24 && cek[1] >= 0 && cek[1] < 60
-			if (!tes) { 
-				alert("Masukkan jam dengan format yang benar benar HH:MM")
-				waktu = ''
-			}
-		},
-		dateFormat(a) {
-		  const a001 = a[1] ? new Date(a[1]) : new Date();
-		  const a002 = a001.getDate();
-		  const a003 = a001.getMonth();
-		  const a004 = a001.getFullYear();
-		  const a005 = a001.getHours() > 9 ? a001.getHours() : "0"+a001.getHours();
-		  const a006 = a001.getMinutes() > 9 ? a001.getMinutes() : "0"+a001.getMinutes();
-		  const a007 = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Des"];
- 
-		  if (a[0] == "time") { return a001.getTime(); } //dapatkan waktu dalam bentuk mili second
-		  else if (a[0] == "full") { return a002+" "+a007[a003]+" "+a004+" "+a005+":"+a006; }  //dapatkan waktu penuh yyyy mmm dd hh:mm
-		  else if (a[0] == "+1") { return a001.getTime()-25200000+86400000; } // hari selanjutnya pada jam 00:00
-		  else if (a[0] == "-1") { return a001.getTime()-25200000-86400000; } // hari sebelumnya pada jam 00:00
-		  else if (a[0] == "0") { return a001.getTime()-25200000; } // hari yang tersebut pada jam 00:00
-		  else if (a[0] == "tgl") { return a002+" "+a007[a003]+" "+a004; } //tanggal saja
-		},
-		absen1 : function ($event) {
-			this.model[2] = $event.target.value;
-			this.model[3] = this.karyawan.daftar[this.model[2]][2]
-			this.model[4] = this.karyawan.daftar[this.model[2]][3]
 		}
+	  },
+	  //untuk panggil form input
+	  currentForm: function () {
+			return "form-"+this.currentTab.toLowerCase()
+	  },
+	  //siapkkan absen untuk ditampilkan
+	  karyawanSiap: function() {
+		return ObjKaryawanAbsen(this.deData.karyawan)
+	  }
 	}
-})
+  });

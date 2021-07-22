@@ -1,0 +1,244 @@
+//initiate for for local dataabse
+let db = new Localbase('db')
+// db.config.debug = false
+
+new Vue({
+	el: "#utama",
+	data: {
+	  currentTab: "Absen",
+	  tabs: ['Divisi', 'Bagian', 'Level', 'Karyawan', 'Absen'],
+	  modal: false, //buka tutup modal
+	  icon: {
+		  plus: "fa fa-plus w3-button w3-round-large w3-teal",
+		  pencil: "fa fa-pencil w3-teal"
+	  },
+	  datanyaForm: '',
+	  deData: {
+		  divisi:[],
+          bagian: [],
+          level: [],
+          karyawan: [],
+		  absen: [],
+		  lastId: {}
+	  }
+	},
+	methods: {
+		//untuk menambah record
+		tambah (dat) {
+			//the counter +1
+			this.deData.lastId[this.currentTab.toLowerCase()]++
+			let id = this.deData.lastId[this.currentTab.toLowerCase()]
+
+			//add to data id
+			dat['id_'+this.currentTab.toLowerCase()] = id
+
+			//insert to indexeddb
+			db.collection(this.currentTab.toLowerCase()).add(dat)
+
+            //push to front end data
+			this.deData[this.currentTab.toLowerCase()].push(dat) //masukkan data
+
+			// update the counter
+			this.reWrite('data_absen', {absen: 'lastId'}, {absen: 'lastId', value: this.deData.lastId})
+
+            this.modal = false //close modal
+		},
+		//buka tutup modal
+		modalChange (ev) {
+			this.modal = !this.modal
+			this.datanyaForm = ev
+		},
+        //untuk update
+		update(ev) {
+			//{store:'divisi', id: {id_divisi: this.datanya.id_divisi}, val:{divisi: this.deData}
+			db.collection(ev.store).doc(ev.id).update(ev.val)
+
+			//update front end data
+			let index = cariIndex( this.deData[this.currentTab.toLowerCase()], 
+			{'equalTo': ['id_'+this.currentTab.toLowerCase(), 
+			this.datanyaForm['id_'+this.currentTab.toLowerCase()] ]}
+			)
+
+			this.deData[this.currentTab.toLowerCase()].splice(index, 1)  //hapus
+			this.deData[this.currentTab.toLowerCase()].splice(index, 0, Object.assign({}, ev.id, ev.val)) //sisipkan
+
+			//close modal
+            this.modalChange()
+        },
+		reWrite(store, id, val) {
+			//(nameStore, {id: idData}, {key: 'new value'})
+			//replace old data with the new one
+			db.collection(store).doc(id).set(val)
+		},
+		getMasterCounter() {
+			//initiate master counter identity
+			db.collection('data_absen').get().then( val => {
+				if(val.length < 1) {
+					db.collection('data_absen').add({
+						absen: 'lastId', value: {
+							divisi: 0, 
+							bagian:0,
+							level: 0,
+							karyawan:0,
+							absen: 0
+						}
+					})
+					this.deData.lastId = {
+						divisi: 0, 
+							bagian:0,
+							level: 0,
+							karyawan:0,
+							absen: 0
+					}
+				} else {		
+					this.deData.lastId = val[0].value
+				}
+			})
+
+		},
+		getDivisi() {
+			//initiatate divisi data
+			db.collection('divisi').get().then(val => {
+				if(val.length > 0) {
+					this.deData.divisi = val
+				}
+			})
+		},
+		getBagian() {
+			//initiatate bagian data 
+			db.collection('bagian').get().then(val => {
+				if(val.length > 0) {
+					this.deData.bagian = val
+				}
+			})
+		},
+		getLevel() {
+			//initiatate level data 
+			db.collection('level').get().then(val => {
+				if(val.length > 0) {
+					this.deData.level = val
+				}
+			})
+		},
+		getKaryawan() {
+			//initiatate level data 
+			db.collection('karyawan').get().then(val => {
+				if(val.length > 0) {
+					this.deData.karyawan = val
+				}
+			})
+		},
+		getAbsen(date){
+			if(date.length == 2) {
+
+			let dates = getDaysArray(new Date(date[0]), new Date(date[1]))
+
+			this.deData.absen = []
+			db.collection('absen').orderBy('tanggal').get().then( (absen) => {
+				absen.map( (val) => {
+
+					dates.map(dateVal => {
+						if(val.tanggal == dateVal) {
+							this.deData.absen.push(val)
+						}
+					})
+
+				})
+			})
+
+
+
+			} else {
+				alert("Set all date form")
+			}
+			// db.collection('absen').doc({tanggal: '2021-5-2'}).get().then(val => {
+			// // 	// if(val.tanggal == date) {
+			// // 	// 	this.deData.absen.push(val)
+			// // 	// 	console.log(true)
+			// // 	// } else {
+			// 		console.log(val)
+			// 	// }
+			// })
+		}
+	},
+	computed: {
+	  //Pindah pindah tab
+	  currentTabComponent () {
+			return "tab-"+this.currentTab.toLowerCase() 
+	  },
+	  //untuk panggil form input
+	  currentForm () {
+			return "form-"+this.currentTab.toLowerCase()
+	  }
+	}, 
+	created () {
+		this.getDivisi()
+		this.getMasterCounter()
+		this.getBagian()
+		this.getLevel()
+		this.getKaryawan()
+	}
+  });
+
+
+function cariIndex (obj, criteria) {
+	//obj = [ {"id": 1, "item1": "item content item content"} ]
+	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+  
+	let result = ''
+	if(criteria.equalTo) {
+		obj.filter((val, index) => {
+			val[criteria.equalTo[0]] == criteria.equalTo[1] ? result = index : ''
+		})
+	}
+	return result
+  }
+
+
+function cariVal (obj, criteria) {
+	//obj = [ {"id": 1, "item1": "item content item content"} ]
+	//cireteria = { "equalTo": ["ObjectKey", "key to find"] }
+	let result = ''
+	
+	if(criteria.equalTo) {
+		obj.filter((val, index) => {
+			val[criteria.equalTo[0]] == criteria.equalTo[1] ? result = obj[index] : ''
+	 	})
+	}
+	return result
+  }
+
+function jamTotal(masuk, pulang, istirahat) {
+  let Amasuk = masuk.split(":")[0]
+  let Apulang= pulang.split(":")[0]
+
+  if(Amasuk > Apulang) {
+    return Number(Apulang)+24 - (Number(Amasuk)+1) - istirahat
+  }
+
+  return Number(Apulang) - (Number(Amasuk)+1) - istirahat
+
+}
+
+function getDaysArray (start, end) {
+	var arr=[]
+    for(dt=new Date(start); dt<= end; dt.setDate(dt.getDate()+1)){
+        arr.push(new Date(dt));
+    }
+    return arr.map((val)=>  val.toISOString().slice(0,10))
+};
+
+function check (criteria, str) {
+	
+		let hasil; //true or false
+		
+		if (criteria == 'date') {
+		  hasil = /^\d{4}[-](0?[1-9]|1[012])[-]([12][0-9]|3[01]|0?[1-9])/g.test(str)
+		} else if (criteria == 'number') {
+		  hasil = !isNaN(str)
+		} else if(criteria == 'clock') {
+		  str[2] == ':' && str.slice(0,2) <= 23 && str.slice(3,5) <= 59 ? hasil = true : hasil = false
+		}
+		return hasil
+
+}
